@@ -1,6 +1,8 @@
 package Actions;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 import MainEvent.Input;
 import MainEvent.Main;
@@ -19,6 +21,12 @@ public class PizzaActions {
         System.out.println(Main.string_separator);
         System.out.print("Введите название пиццы: ");
         String name = Input.inputString();
+
+        if (pizza_list.stream().anyMatch(p -> p.getName().equals(name))) {
+            System.out.println("Пицца с таким названием уже существует!");
+            createNewPizza();
+        }
+
         Pizza pizza = new Pizza(name);
 
         System.out.println("Выберите основу для пиццы:");
@@ -194,12 +202,13 @@ public class PizzaActions {
         }
 
         int num = 1;
-
         for (Pizza pizza : pizza_list) {
+            Set<Ingredient> uniqueIngredients = new java.util.HashSet<>(pizza.getIngredientInfo());
             System.out.println(num + ". " + pizza.getName() + "\t" + pizza.getPrice() + "руб.");
             System.out.println("   Основа: " + pizza.getBaseInfo().getInfo() + "\t" + pizza.getBaseInfo().getPrice() + "руб.");
-            for (Ingredient ingredient : pizza.getIngredientInfo()) {
-                System.out.println("   " + ingredient.getInfo() + "\t" + ingredient.getPrice() + "руб.");
+            for (Ingredient ingredient : uniqueIngredients) {
+                int quantity = java.util.Collections.frequency(pizza.getIngredientInfo(), ingredient);
+                System.out.println("   " + ingredient.getInfo() + "\t" + quantity + "x" + "\t" + ingredient.getPrice()*quantity + "руб.");
             }
             num++;
         }

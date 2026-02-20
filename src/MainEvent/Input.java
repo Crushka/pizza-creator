@@ -7,6 +7,11 @@ public class Input {
     public static int inputInt() {
         try {
             int num = scanner.nextInt();
+            if (num <= 0) {
+                System.out.println("Ошибка ввода! Введите положительное число.");
+                scanner.nextLine();
+                return inputInt();
+            }
             scanner.nextLine();
             return num;
         } catch (Exception e) {
@@ -19,6 +24,11 @@ public class Input {
     public static float inputFloat() {
         try {
             float num = scanner.nextFloat();
+            if (num <= 0) {
+                System.out.println("Ошибка ввода! Введите положительное число.");
+                scanner.nextLine();
+                return inputFloat();
+            }
             scanner.nextLine();
             return num;
         } catch (Exception e) {
@@ -30,6 +40,10 @@ public class Input {
 
     public static String inputString() {
         String str = scanner.nextLine();
+        if (str.trim().isEmpty()) {
+            System.out.println("Ошибка ввода! Введите непустую строку.");
+            return inputString();
+        }
         return str;
     }
 
