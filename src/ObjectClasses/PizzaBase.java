@@ -1,3 +1,5 @@
+package ObjectClasses;
+
 public class PizzaBase implements IPizzaElems {
     private String type;
     private float price;
@@ -5,7 +7,7 @@ public class PizzaBase implements IPizzaElems {
 
     private static float classic_base_price;
 
-    PizzaBase(String type, float price, float percentage_from_default) {
+    public PizzaBase(String type, float price, float percentage_from_default) {
         this.type = type;
         this.percentage_from_default = percentage_from_default;
 
@@ -28,12 +30,12 @@ public class PizzaBase implements IPizzaElems {
 
     @Override
     public void setPrice(float price) {
-        if (type.equals("Классическое тесто")) {
+        if (type.equals("Classic")) {
             classic_base_price = price;
             this.price = price;
             return;
         }
-
+        
         if (classic_base_price == 0) {
             classic_base_price = price;
             this.price = price;

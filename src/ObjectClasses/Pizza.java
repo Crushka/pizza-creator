@@ -1,3 +1,5 @@
+package ObjectClasses;
+
 import java.util.ArrayList;
 
 public class Pizza {
@@ -5,7 +7,7 @@ public class Pizza {
     private PizzaBase pizza_base;
     private String name;
 
-    Pizza(String name) {
+    public Pizza(String name) {
         this.name = name;
     }
 
@@ -19,6 +21,10 @@ public class Pizza {
     
     public void deleteIngredient(int el_num) {
         ingredients.remove(el_num);
+    }
+
+    public void deleteIngredient(Ingredient ingredient) {
+        ingredients.remove(ingredient);
     }
 
     public String getName() {

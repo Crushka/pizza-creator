@@ -1,8 +1,10 @@
+package ObjectClasses;
+
 public class Ingredient implements IPizzaElems {
     private String type;
     private float price;
 
-    Ingredient(String type, float price) {
+    public Ingredient(String type, float price) {
         this.type = type;
         this.price = price;
     }
