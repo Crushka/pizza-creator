@@ -2,7 +2,7 @@ package MainEvent;
 import java.util.Scanner;
 
 public class Input {
-    public static Scanner scanner = new Scanner(System.in, "UTF-8");
+    public static Scanner scanner = new Scanner(System.in, "Windows-1251");
 
     public static int inputInt() {
         try {

@@ -1,6 +1,7 @@
 package Actions;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import MainEvent.Input;
 import MainEvent.Main;
@@ -19,12 +20,18 @@ public class PizzaActions {
         System.out.println(Main.string_separator);
         System.out.print("Введите название пиццы: ");
         String name = Input.inputString();
+
+        if (pizza_list.stream().anyMatch(p -> p.getName().equals(name))) {
+            System.out.println("Пицца с таким названием уже существует!");
+            createNewPizza();
+        }
+
         Pizza pizza = new Pizza(name);
 
         System.out.println("Выберите основу для пиццы:");
         int num = 1;
         for (PizzaBase pizza_base : BaseActions.getPizzaBaseList()) {
-            System.out.println(num + ". " + pizza_base.getInfo() + "\t" + pizza_base.getPrice() + "руб.");
+            System.out.println(num + ". " + pizza_base.getName() + "\t" + pizza_base.getPrice() + "руб.");
             num++;
         }
         System.out.println(num + ". Назад");
@@ -54,7 +61,7 @@ public class PizzaActions {
         int num = 1;
 
         for (Ingredient ingredient : IngredientsActions.getIngredientsList()) {
-            System.out.println(num + ". " + ingredient.getInfo() + "\t" + ingredient.getPrice() + "руб.");
+            System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice() + "руб.");
             num++;
         }
         System.out.println(num + ". Назад");
@@ -98,10 +105,10 @@ public class PizzaActions {
         int num = 1;
 
         for (Ingredient ingredient : pizza.getIngredientInfo()) {
-            System.out.println(num + ". " + ingredient.getInfo() + "\t" + ingredient.getPrice());
+            System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice() + "руб.");
             num++;
         }
-        System.out.println(num++ + ". Основа: " + pizza.getBaseInfo() + "\t");
+        System.out.println(num++ + ". Основа: " + pizza.getBaseInfo().getName() + "\t");
         System.out.println(num + ". Назад");
         
         System.out.print("Введите номер: ");
@@ -156,7 +163,7 @@ public class PizzaActions {
 
                 int num = 1;
                 for (PizzaBase base : BaseActions.getPizzaBaseList()) {
-                    System.out.println(num + ". " + base.getInfo() + "\t" + base.getPrice());
+                    System.out.println(num + ". " + base.getName() + "\t" + base.getPrice());
                     num++;
                 }
                 System.out.println(num + ". Назад");
@@ -194,12 +201,13 @@ public class PizzaActions {
         }
 
         int num = 1;
-
         for (Pizza pizza : pizza_list) {
+            Set<Ingredient> uniqueIngredients = new java.util.HashSet<>(pizza.getIngredientInfo());
             System.out.println(num + ". " + pizza.getName() + "\t" + pizza.getPrice() + "руб.");
-            System.out.println("   Основа: " + pizza.getBaseInfo().getInfo() + "\t" + pizza.getBaseInfo().getPrice() + "руб.");
-            for (Ingredient ingredient : pizza.getIngredientInfo()) {
-                System.out.println("   " + ingredient.getInfo() + "\t" + ingredient.getPrice() + "руб.");
+            System.out.println("   Основа: " + pizza.getBaseInfo().getName() + "\t" + pizza.getBaseInfo().getPrice() + "руб.");
+            for (Ingredient ingredient : uniqueIngredients) {
+                int quantity = java.util.Collections.frequency(pizza.getIngredientInfo(), ingredient);
+                System.out.println("   " + ingredient.getName() + "\t" + quantity + "x" + "\t" + ingredient.getPrice()*quantity + "руб.");
             }
             num++;
         }
@@ -207,7 +215,8 @@ public class PizzaActions {
         System.out.println(Main.string_separator);
         System.out.println("Выберите действие:");
         System.out.println("1. Удалить пиццу");
-        System.out.println("2. Назад");
+        System.out.println("2. Изменить название пиццы");
+        System.out.println("3. Назад");
 
         System.out.print("Введите номер: ");
         int choice = Input.inputInt();
@@ -225,6 +234,24 @@ public class PizzaActions {
                 Main.home();
                 break;
             case 2:
+                System.out.println(Main.string_separator);
+                System.out.print("Введите номер пиццы для изменения названия: ");
+                int choice3 = Input.inputInt();
+                if ((choice3 > num) || (choice3 <= 0)) {
+                    Main.errorChoice();
+                    getPizzaListInfo();
+                }
+                System.out.print("Введите новое название: ");
+                String newName = Input.inputString();
+                if (pizza_list.stream().anyMatch(p -> p.getName().equals(newName))) {
+                    System.out.println("Пицца с таким названием уже существует!");
+                    getPizzaListInfo();
+                }
+                pizza_list.get(choice3 - 1).setName(newName);
+                System.out.println("Название успешно изменено!");
+                Main.home();
+                break;
+            case 3:
                 Main.home();
                 break;
             default:

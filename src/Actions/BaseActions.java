@@ -20,7 +20,7 @@ public class BaseActions {
         String name_base = Input.inputString();
 
         for (PizzaBase pizza_base : pizza_base_list) {
-            if (pizza_base.getInfo().equals(name_base)) {
+            if (pizza_base.getName().equals(name_base)) {
                 System.out.println("Основа с таким названием уже существует!");
                 createNewPizzaBase();
                 return;
@@ -55,7 +55,7 @@ public class BaseActions {
         int num = 1;
 
         for (PizzaBase base1 : pizza_base_list) {
-            System.out.println(num + ". " + base1.getInfo() + "\t" + base1.getPrice());
+            System.out.println(num + ". " + base1.getName() + "\t" + base1.getPrice());
             num++;
         }
                 
@@ -79,7 +79,7 @@ public class BaseActions {
         int temp = 0;
         if (pizza_list.size() > 0) {
             for (Pizza pizza : pizza_list) {
-                if (pizza.getBaseInfo().getInfo().equals(pizza_base_list.get(choice_del - 1).getInfo())) {
+                if (pizza.getBaseInfo().getName().equals(pizza_base_list.get(choice_del - 1).getName())) {
                     System.out.println("Эта основа уже используется в пицце " + pizza.getName() + "!");
                     temp++;
                 }
@@ -103,7 +103,7 @@ public class BaseActions {
         int num = 1;
 
         for (PizzaBase pizza_base : pizza_base_list) {
-            System.out.println(num + ". " + pizza_base.getInfo() + "\t" + pizza_base.getPrice());
+            System.out.println(num + ". " + pizza_base.getName() + "\t" + pizza_base.getPrice());
             num++;
         }
         System.out.println(num + ". Назад");
@@ -148,5 +148,53 @@ public class BaseActions {
             System.out.println("Цена успешно изменена!");
             Main.getBaseIngInfo();
         }
+    }
+
+    public static void changePizzaBaseName() {
+        if (pizza_base_list.isEmpty()) {
+            System.out.println("Вы не создали ни одной основы!");
+            Main.getBaseIngInfo();
+        }
+
+        System.out.println(Main.string_separator);
+        System.out.println("Выберите основу для изменения названия: ");
+        int num = 1;
+
+        for (PizzaBase pizza_base : pizza_base_list) {
+            System.out.println(num + ". " + pizza_base.getName() + "\t" + pizza_base.getPrice());
+            num++;
+        }
+        System.out.println(num + ". Назад");
+                
+        System.out.print("Введите номер: ");
+        int choice_base = Input.inputInt();
+
+        if (choice_base == 1) {
+            System.out.println("Вы не можете изменить название классической основы!");
+            changePizzaBaseName();
+        }
+        else if (choice_base == num) {
+            Main.getBaseIngInfo();
+        }
+        else if ((choice_base > num) || (choice_base <= 0)) {
+            Main.errorChoice();
+            Main.getBaseIngInfo();
+        }
+
+        System.out.print("Введите новое название: ");
+        String new_name = Input.inputString();
+
+        for (PizzaBase pizza_base : pizza_base_list) {
+            if (pizza_base.getName().equals(new_name)) {
+                System.out.println("Основа с таким названием уже существует!");
+                changePizzaBaseName();
+                return;
+            }
+        }
+
+        pizza_base_list.get(choice_base - 1).setName(new_name);
+
+        System.out.println("Название успешно изменено!");
+        Main.getBaseIngInfo();
     }
 }

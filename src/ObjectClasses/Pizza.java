@@ -27,6 +27,10 @@ public class Pizza {
         ingredients.remove(ingredient);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public String getName() {
         return name;
     }
