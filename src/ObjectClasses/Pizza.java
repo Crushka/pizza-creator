@@ -7,8 +7,9 @@ public class Pizza {
     private PizzaBase pizza_base;
     private String name;
 
-    public Pizza(String name) {
+    public Pizza(String name, PizzaBase pizzaBase) {
         this.name = name;
+        pizza_base = pizzaBase;
     }
 
     public void addIngredient(Ingredient ingredient) {
@@ -27,6 +28,10 @@ public class Pizza {
         ingredients.remove(ingredient);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public String getName() {
         return name;
     }

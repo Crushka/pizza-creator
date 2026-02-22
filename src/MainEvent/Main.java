@@ -65,8 +65,6 @@ public class Main {
         }
     }
 
-    
-
     public static void createIngAndBase() {
         System.out.println(string_separator);
         System.out.println("Выберите действие:");
@@ -105,19 +103,21 @@ public class Main {
         System.out.println(string_separator);
         System.out.println("Ингредиенты:");
         for (Ingredient ingredient : IngredientsActions.getIngredientsList()) {
-            System.out.println(ingredient.getInfo() + "\t" + ingredient.getPrice());
+            System.out.println(ingredient.getName() + "\t" + ingredient.getPrice());
         }
         System.out.println(string_separator);
         System.out.println("Основы:");
         for (PizzaBase pizza_base : BaseActions.getPizzaBaseList()) {
-            System.out.println(pizza_base.getInfo() + "\t" + pizza_base.getPrice());
+            System.out.println(pizza_base.getName() + "\t" + pizza_base.getPrice());
         }
 
         System.out.println(string_separator);
         System.out.println("Выберите действие: ");
         System.out.println("1. Изменить цену ингредиента");
         System.out.println("2. Изменить цену основы");
-        System.out.println("3. Назад");
+        System.out.println("3. Изменить название ингредиента");
+        System.out.println("4. Изменить название основы");
+        System.out.println("5. Назад");
 
         System.out.print("Введите номер: ");
         int choice = Input.inputInt();
@@ -129,7 +129,13 @@ public class Main {
             case 2: /// Изменить цену основы
                 Actions.BaseActions.changePizzaBasePrice();
                 break;
-            case 3: /// Назад
+            case 3: /// Изменить название ингредиента
+                Actions.IngredientsActions.changeIngredientName();
+                break;
+            case 4: /// Изменить название основы
+                Actions.BaseActions.changePizzaBaseName();
+                break;
+            case 5: /// Назад
                 home();
                 break;
             default:

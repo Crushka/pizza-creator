@@ -20,7 +20,7 @@ public class IngredientsActions {
         String name = Input.inputString();
 
         for (Ingredient ingredient : ingredients_list) {
-            if (ingredient.getInfo().equals(name)) {
+            if (ingredient.getName().equals(name)) {
                 System.out.println("Ингредиент с таким названием уже существует!");
                 createNewIngredient();
                 return;
@@ -47,7 +47,7 @@ public class IngredientsActions {
         int num = 1;
 
         for (Ingredient ingredient : ingredients_list) {
-            System.out.println(num + ". " + ingredient.getInfo() + "\t" + ingredient.getPrice());
+            System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
         System.out.println(num + ". Назад");
@@ -69,7 +69,7 @@ public class IngredientsActions {
         for (Pizza pizza : Actions.PizzaActions.getPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
             java.util.Iterator<Ingredient> it = pizza.getIngredientInfo().iterator();
             while (it.hasNext()) {
-                if (it.next().getInfo().equals(deletedIngredient.getInfo())) {
+                if (it.next().getName().equals(deletedIngredient.getName())) {
                     it.remove();
                 }
             }
@@ -91,7 +91,7 @@ public class IngredientsActions {
         int num = 1;
 
         for (Ingredient ingredient : ingredients_list) {
-            System.out.println(num + ". " + ingredient.getInfo() + "\t" + ingredient.getPrice());
+            System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
         System.out.println(num + ". Назад");
@@ -112,6 +112,51 @@ public class IngredientsActions {
 
         ingredients_list.get(choice_ingredient - 1).setPrice(new_price);
         System.out.println("Цена успешно изменена!");
+        Main.getBaseIngInfo();
+    }
+
+    public static void changeIngredientName() {
+        if (ingredients_list.isEmpty()) {
+            System.out.println("Вы не создали ни одного ингредиента!");
+            Main.getBaseIngInfo();
+            return;
+        }
+
+        System.out.println(Main.string_separator);
+        System.out.println("Выберите ингредиент для изменения названия: ");
+        int num = 1;
+
+        for (Ingredient ingredient : ingredients_list) {
+            System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
+            num++;
+        }
+        System.out.println(num + ". Назад");
+                
+        System.out.print("Введите номер: ");
+        int choice_ingredient = Input.inputInt();
+
+        if (choice_ingredient == num) {
+            Main.getBaseIngInfo();
+        }
+        else if ((choice_ingredient > num) || (choice_ingredient <= 0)) {
+            Main.errorChoice();
+            changeIngredientName();
+        }
+
+        System.out.print("Введите новое название: ");
+        String new_name = Input.inputString();
+
+        for (Ingredient ingredient : ingredients_list) {
+            if (ingredient.getName().equals(new_name)) {
+                System.out.println("Ингредиент с таким названием уже существует!");
+                changeIngredientName();
+                return;
+            }
+        }
+
+        ingredients_list.get(choice_ingredient - 1).setName(new_name);
+
+        System.out.println("Название успешно изменено!");
         Main.getBaseIngInfo();
     }
 }
