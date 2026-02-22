@@ -3,7 +3,7 @@ package Actions;
 import java.util.ArrayList;
 
 import ObjectClasses.Ingredient;
-import ObjectClasses.Pizza;
+import ObjectClasses.CustomPizza;
 import MainEvent.Input;
 import MainEvent.Main;
 
@@ -66,7 +66,7 @@ public class IngredientsActions {
         Ingredient deletedIngredient = ingredients_list.get(choice_del - 1);
         ingredients_list.remove(choice_del - 1);
 
-        for (Pizza pizza : Actions.PizzaActions.getPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
+        for (CustomPizza pizza : Actions.PizzaActions.getPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
             java.util.Iterator<Ingredient> it = pizza.getIngredientInfo().iterator();
             while (it.hasNext()) {
                 if (it.next().getName().equals(deletedIngredient.getName())) {

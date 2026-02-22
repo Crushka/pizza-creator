@@ -2,7 +2,7 @@ package Actions;
 
 import java.util.ArrayList;
 
-import ObjectClasses.Pizza;
+import ObjectClasses.CustomPizza;
 import ObjectClasses.PizzaBase;
 import MainEvent.Input;
 import MainEvent.Main;
@@ -75,10 +75,10 @@ public class BaseActions {
             Main.createIngAndBase();
         }
 
-        ArrayList<Pizza> pizza_list = Actions.PizzaActions.getPizzaList();
+        ArrayList<CustomPizza> pizza_list = Actions.PizzaActions.getPizzaList();
         int temp = 0;
         if (pizza_list.size() > 0) {
-            for (Pizza pizza : pizza_list) {
+            for (CustomPizza pizza : pizza_list) {
                 if (pizza.getBaseInfo().getName().equals(pizza_base_list.get(choice_del - 1).getName())) {
                     System.out.println("Эта основа уже используется в пицце " + pizza.getName() + "!");
                     temp++;

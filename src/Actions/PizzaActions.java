@@ -1,19 +1,26 @@
 package Actions;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import MainEvent.Input;
 import MainEvent.Main;
-import ObjectClasses.Ingredient;
-import ObjectClasses.Pizza;
-import ObjectClasses.PizzaBase;
+import ObjectClasses.*;
 
 public class PizzaActions {
-    public static ArrayList<Pizza> pizza_list = new ArrayList<>();
+    public static ArrayList<CustomPizza> pizza_list = new ArrayList<>();
+    public static ArrayList<SystemPizza> system_pizza_list = new ArrayList<>();
+    public static ArrayList<CombinedPizza> combined_pizza_list = new ArrayList<>();
 
-    public static ArrayList<Pizza> getPizzaList() {
+    public static ArrayList<CustomPizza> getPizzaList() {
         return pizza_list;
+    }
+
+    public static ArrayList<SystemPizza> getSystemPizzaList() {
+        return system_pizza_list;
+    }
+
+    public static ArrayList<CombinedPizza> getCombinedPizzaList() {
+        return combined_pizza_list;
     }
 
     public static void createNewPizza() {
@@ -44,7 +51,7 @@ public class PizzaActions {
             Main.errorChoice();
             createNewPizza();
         }
-        Pizza pizza = new Pizza(name, BaseActions.getPizzaBaseList().get(choice - 1));
+        CustomPizza pizza = new CustomPizza(name, BaseActions.getPizzaBaseList().get(choice - 1));
 
         pizza_list.add(pizza);
         System.out.println("Пицца успешно создана!");
@@ -52,7 +59,7 @@ public class PizzaActions {
         Main.home();
     }
 
-    public static void addIngToPizza(Pizza pizza) {
+    public static void addIngToPizza(CustomPizza pizza) {
         System.out.println(Main.string_separator);
         System.out.println("Выберите ингредиент для пиццы: ");
         int num = 1;
@@ -96,7 +103,7 @@ public class PizzaActions {
         }
     }
 
-    public static void delIngFromPizza(Pizza pizza) {
+    public static void delIngFromPizza(CustomPizza pizza) {
         System.out.println(Main.string_separator);
         System.out.println("Выберите ингредиент для удаления: ");
         int num = 1;
@@ -144,7 +151,7 @@ public class PizzaActions {
         }
     }
 
-    public static void changePizzaBase(Pizza pizza) {
+    public static void changePizzaBase(CustomPizza pizza) {
         System.out.println(Main.string_separator);
         System.out.println("Вы не можете удалить основу пиццы! Желаете ли вы её поменять?");
         System.out.println("1. Поменять");
@@ -198,14 +205,8 @@ public class PizzaActions {
         }
 
         int num = 1;
-        for (Pizza pizza : pizza_list) {
-            Set<Ingredient> uniqueIngredients = new java.util.HashSet<>(pizza.getIngredientInfo());
-            System.out.println(num + ". " + pizza.getName() + "\t" + pizza.getPrice() + "руб.");
-            System.out.println("   Основа: " + pizza.getBaseInfo().getName() + "\t" + pizza.getBaseInfo().getPrice() + "руб.");
-            for (Ingredient ingredient : uniqueIngredients) {
-                int quantity = java.util.Collections.frequency(pizza.getIngredientInfo(), ingredient);
-                System.out.println("   " + ingredient.getName() + "\t" + quantity + "x" + "\t" + ingredient.getPrice()*quantity + "руб.");
-            }
+        for (CustomPizza pizza : pizza_list) {
+            System.out.println(num + ". " + pizza.toString());
             num++;
         }
 
@@ -268,7 +269,7 @@ public class PizzaActions {
         System.out.println("Выберите пиццу: ");
         int num = 1;
 
-        for (Pizza pizza : pizza_list) {
+        for (CustomPizza pizza : pizza_list) {
             System.out.println(num + ". " + pizza.getName() + "\t" + pizza.getPrice());
             num++;
         }

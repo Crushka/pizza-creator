@@ -1,4 +1,7 @@
 package MainEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Input {
@@ -26,6 +29,21 @@ public class Input {
             scanner.nextLine();
             return inputFloat();
         }
+    }
+
+    public static LocalDateTime inputDateTime() {
+        LocalDateTime orderTime;
+        String dateTimeInput = inputString();
+        if (dateTimeInput.isEmpty()) {
+            return LocalDateTime.now();
+        }
+        try {
+            orderTime = LocalDateTime.parse(dateTimeInput, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        } catch (DateTimeParseException e) {
+            System.out.println("Неверный формат даты и времени!");
+            return inputDateTime();
+        }
+        return orderTime;
     }
 
     public static String inputString() {
