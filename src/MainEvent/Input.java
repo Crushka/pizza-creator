@@ -1,4 +1,5 @@
 package MainEvent;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -44,6 +45,18 @@ public class Input {
             return inputDateTime();
         }
         return orderTime;
+    }
+
+    public static LocalDate inputLocalDate() {
+        String s = inputString().trim();
+        if (s.isEmpty())
+            return null;
+        try {
+            return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        } catch (DateTimeParseException e) {
+            System.out.println("Неверный формат даты! Используйте дд.мм.гггг (например 03.05.2025).");
+            return inputLocalDate();
+        }
     }
 
     public static String inputString() {

@@ -1,6 +1,7 @@
 package Actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import MainEvent.*;
 import ObjectClasses.*;
@@ -54,8 +55,15 @@ public class PizzaActions {
             Main.home();
         }
 
+        List<IPizza> toShow = askFilterPizzasByIngredient(new ArrayList<>(DataBase.getCustomPizzaList()));
+        if (toShow.isEmpty()) {
+            System.out.println("Нет пицц, подходящих под фильтр.");
+            Main.home();
+            return;
+        }
+
         int num = 1;
-        for (CustomPizza pizza : DataBase.getCustomPizzaList()) {
+        for (IPizza pizza : toShow) {
             System.out.println(num + ". " + pizza.toString());
             num++;
         }
@@ -78,7 +86,7 @@ public class PizzaActions {
                     getCustomPizzaListInfo();
                 }
 
-                CustomPizza cur_pizza = DataBase.getCustomPizzaList().get(choice2 - 1);
+                CustomPizza cur_pizza = (CustomPizza) toShow.get(choice2 - 1);
                 boolean isInCombPizza = false;
                 for (CombinedPizza combined_pizza : DataBase.getCombinedPizzaList()) {
                     if ((combined_pizza.getPizza1() == cur_pizza) || (combined_pizza.getPizza2() == cur_pizza)) {
@@ -108,7 +116,7 @@ public class PizzaActions {
                     System.out.println("Пицца с таким названием уже существует!");
                     getCustomPizzaListInfo();
                 }
-                DataBase.getCustomPizzaList().get(choice3 - 1).setName(newName);
+                ((CustomPizza) toShow.get(choice3 - 1)).setName(newName);
                 System.out.println("Название успешно изменено!");
                 Main.home();
                 break;
@@ -461,10 +469,28 @@ public class PizzaActions {
 
     /// БЛОК СИСТЕМНЫХ ПИЦЦ
 
+    /** Спрашивает фильтр по ингредиенту и возвращает отфильтрованный список пицц. */
+    private static List<IPizza> askFilterPizzasByIngredient(List<IPizza> pizzas) {
+        System.out.println("Фильтр по ингредиенту (название или пусто — показать все): ");
+        String name = Input.inputString();
+        return Filtration.filterPizzasByIngredient(pizzas, name);
+    }
+
     public static void getSystemPizzaList() {
         System.out.println(Main.string_separator);
-        
-        for (SystemPizza system_pizza : DataBase.getSystemPizzaList()) {
+
+        List<IPizza> toShow = askFilterPizzasByIngredient(new ArrayList<>(DataBase.getSystemPizzaList()));
+        if (toShow.isEmpty()) {
+            System.out.println("Нет пицц, подходящих под фильтр.");
+            System.out.println("1. Назад");
+            System.out.print("Введите номер: ");
+            if (Input.inputInt() == 1) Main.home();
+            else Main.errorChoice();
+            getSystemPizzaList();
+            return;
+        }
+
+        for (IPizza system_pizza : toShow) {
             System.out.println("- " + system_pizza.toString());
         }
         System.out.println("1. Назад");

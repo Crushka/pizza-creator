@@ -2,6 +2,7 @@ package Actions;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import Order.Order;
 import MainEvent.*;
 import ObjectClasses.*;
@@ -48,11 +49,18 @@ public class OrderActions {
         }
 
         System.out.println(Main.string_separator);
-        System.out.println("История заказов:");
-        int num = 1;
-        for (Order order : completed_order_list) {
-            System.out.println(num + ". " + order.toString());
-            num++;
+        System.out.println("Фильтр по дате (дд.мм.гггг или пусто — показать все): ");
+        java.time.LocalDate filterDate = Input.inputLocalDate();
+        List<Order> toShow = Filtration.filterOrdersByDate(completed_order_list, filterDate);
+        if (toShow.isEmpty()) {
+            System.out.println("Нет заказов за выбранную дату.");
+        } else {
+            System.out.println("История заказов:");
+            int num = 1;
+            for (Order order : toShow) {
+                System.out.println(num + ". " + order.toString());
+                num++;
+            }
         }
 
         while (true) {

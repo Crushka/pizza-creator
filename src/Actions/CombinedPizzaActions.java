@@ -1,6 +1,7 @@
 package Actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import MainEvent.*;
 import ObjectClasses.*;
@@ -488,9 +489,16 @@ public class CombinedPizzaActions {
             startCombinedPizzaActions();
             return;
         }
-        
-        for (CombinedPizza pizza : DataBase.getCombinedPizzaList()) {
-            System.out.println("- " + pizza.toString());
+
+        System.out.println("Фильтр по ингредиенту (название или пусто — показать все): ");
+        String filterName = Input.inputString();
+        List<IPizza> to_show = Filtration.filterPizzasByIngredient(new ArrayList<>(DataBase.getCombinedPizzaList()), filterName);
+        if (to_show.isEmpty()) {
+            System.out.println("Нет комбинированных пицц, подходящих под фильтр.");
+        } else {
+            for (IPizza pizza : to_show) {
+                System.out.println("- " + pizza.toString());
+            }
         }
 
         startCombinedPizzaActions();

@@ -1,11 +1,7 @@
 package Actions;
 
-import ObjectClasses.Ingredient;
-import ObjectClasses.Crust;
-import ObjectClasses.CustomPizza;
-import MainEvent.DataBase;
-import MainEvent.Input;
-import MainEvent.Main;
+import ObjectClasses.*;
+import MainEvent.*;
 
 public class IngredientsActions {
 
@@ -61,7 +57,7 @@ public class IngredientsActions {
         Ingredient deletedIngredient = DataBase.getIngredientsList().get(choice_del - 1);
         DataBase.getIngredientsList().remove(choice_del - 1);
 
-        for (CustomPizza pizza : DataBase.getCustomPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
+        for (IPizza pizza : DataBase.getAllPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
             java.util.Iterator<Ingredient> it = pizza.getIngredientInfo().iterator();
             while (it.hasNext()) {
                 if (it.next().getName().equals(deletedIngredient.getName())) {

@@ -1,11 +1,10 @@
 package MainEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import Actions.CombinedPizzaActions;
-import ObjectClasses.Ingredient;
-import ObjectClasses.PizzaBase;
-import ObjectClasses.SystemPizza;
+import Actions.*;
+import ObjectClasses.*;
 
 public class Main {
     public static final String string_separator = "--------------";
@@ -167,13 +166,18 @@ public class Main {
 
     public static void getBaseIngInfo() {
         System.out.println(string_separator);
+        System.out.println("Фильтр по названию (пусто — показать все): ");
+        String filterName = Input.inputString();
+        List<Ingredient> ingredientsToShow = Filtration.filterIngredientsByName(DataBase.getIngredientsList(), filterName);
+        List<PizzaBase> basesToShow = Filtration.filterBasesByName(DataBase.getPizzaBaseList(), filterName);
+
         System.out.println("Ингредиенты:");
-        for (Ingredient ingredient : DataBase.getIngredientsList()) {
+        for (Ingredient ingredient : ingredientsToShow) {
             System.out.println(ingredient.getName() + "\t" + ingredient.getPrice());
         }
         System.out.println(string_separator);
         System.out.println("Основы:");
-        for (PizzaBase pizza_base : DataBase.getPizzaBaseList()) {
+        for (PizzaBase pizza_base : basesToShow) {
             System.out.println(pizza_base.getName() + "\t" + pizza_base.getPrice());
         }
 

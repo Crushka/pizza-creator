@@ -1,6 +1,7 @@
 package Actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import MainEvent.*;
 import ObjectClasses.*;
@@ -167,8 +168,11 @@ public class CrustActions {
 
     public static void getCrustInfo() {
         System.out.println(Main.string_separator);
+        System.out.println("Фильтр по названию бортика (пусто — показать все): ");
+        String filterName = Input.inputString();
+        List<Crust> toShow = Filtration.filterCrustsByName(DataBase.getCrustsList(), filterName);
         int num = 1;
-        for (Crust crust : DataBase.getCrustsList()) {
+        for (Crust crust : toShow) {
             System.out.println(num++ + ". " + crust.toString());
         }
 
