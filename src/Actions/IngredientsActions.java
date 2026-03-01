@@ -1,25 +1,20 @@
 package Actions;
 
-import java.util.ArrayList;
-
 import ObjectClasses.Ingredient;
-import ObjectClasses.Pizza;
+import ObjectClasses.Crust;
+import ObjectClasses.CustomPizza;
+import MainEvent.DataBase;
 import MainEvent.Input;
 import MainEvent.Main;
 
 public class IngredientsActions {
-    private static ArrayList<Ingredient> ingredients_list = new ArrayList<>();
-
-    public static ArrayList<Ingredient> getIngredientsList() {
-        return ingredients_list;
-    }
 
     public static void createNewIngredient() {
         System.out.println(Main.string_separator);
         System.out.print("Введите название ингредиента: ");
         String name = Input.inputString();
 
-        for (Ingredient ingredient : ingredients_list) {
+        for (Ingredient ingredient : DataBase.getIngredientsList()) {
             if (ingredient.getName().equals(name)) {
                 System.out.println("Ингредиент с таким названием уже существует!");
                 createNewIngredient();
@@ -30,15 +25,15 @@ public class IngredientsActions {
         System.out.print("Введите цену ингредиента: ");
         float price = Input.inputFloat();
 
-        ingredients_list.add(new Ingredient(name, price));
+        DataBase.getIngredientsList().add(new Ingredient(name, price));
         System.out.println("Ингредиент успешно добавлен!");
-        Main.createIngAndBase();
+        Main.createThings();
     }
 
     public static void deleteIngredient() {
-        if (ingredients_list.isEmpty()) {
+        if (DataBase.getIngredientsList().isEmpty()) {
             System.out.println("Вы не создали ни одного ингредиента!");
-            Main.createIngAndBase();
+            Main.createThings();
             return;
         }
 
@@ -46,7 +41,7 @@ public class IngredientsActions {
         System.out.println("Выберите ингредиент для удаления: ");
         int num = 1;
 
-        for (Ingredient ingredient : ingredients_list) {
+        for (Ingredient ingredient : DataBase.getIngredientsList()) {
             System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
@@ -56,17 +51,17 @@ public class IngredientsActions {
         int choice_del = Input.inputInt();
 
         if (choice_del == num)
-            Main.createIngAndBase();
+            Main.createThings();
 
         else if ((choice_del > num) || (choice_del <= 0)) {
             Main.errorChoice();
-            Main.createIngAndBase();
+            Main.createThings();
         }
 
-        Ingredient deletedIngredient = ingredients_list.get(choice_del - 1);
-        ingredients_list.remove(choice_del - 1);
+        Ingredient deletedIngredient = DataBase.getIngredientsList().get(choice_del - 1);
+        DataBase.getIngredientsList().remove(choice_del - 1);
 
-        for (Pizza pizza : Actions.PizzaActions.getPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
+        for (CustomPizza pizza : DataBase.getCustomPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
             java.util.Iterator<Ingredient> it = pizza.getIngredientInfo().iterator();
             while (it.hasNext()) {
                 if (it.next().getName().equals(deletedIngredient.getName())) {
@@ -75,12 +70,21 @@ public class IngredientsActions {
             }
         }
 
+        for (Crust crust : DataBase.getCrustsList()) { /// Удаление ингредиента из бортиках, в которых он есть
+            java.util.Iterator<Ingredient> it = crust.getIngredients().iterator();
+            while (it.hasNext()) {
+                if (it.next().getName().equals(deletedIngredient.getName())) {
+                    it.remove();
+                }
+            }
+        }
+
         System.out.println("Ингредиент успешно удалён!");
-        Main.createIngAndBase();
+        Main.createThings();
     }
 
     public static void changeIngredientPrice() {
-        if (ingredients_list.isEmpty()) {
+        if (DataBase.getIngredientsList().isEmpty()) {
             System.out.println("Вы не создали ни одного ингредиента!");
             Main.getBaseIngInfo();
             return;
@@ -90,7 +94,7 @@ public class IngredientsActions {
         System.out.println("Выберите ингредиент для изменения цены: ");
         int num = 1;
 
-        for (Ingredient ingredient : ingredients_list) {
+        for (Ingredient ingredient : DataBase.getIngredientsList()) {
             System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
@@ -110,13 +114,13 @@ public class IngredientsActions {
         System.out.print("Введите новую цену: ");
         float new_price = Input.inputFloat();
 
-        ingredients_list.get(choice_ingredient - 1).setPrice(new_price);
+        DataBase.getIngredientsList().get(choice_ingredient - 1).setPrice(new_price);
         System.out.println("Цена успешно изменена!");
         Main.getBaseIngInfo();
     }
 
     public static void changeIngredientName() {
-        if (ingredients_list.isEmpty()) {
+        if (DataBase.getIngredientsList().isEmpty()) {
             System.out.println("Вы не создали ни одного ингредиента!");
             Main.getBaseIngInfo();
             return;
@@ -126,7 +130,7 @@ public class IngredientsActions {
         System.out.println("Выберите ингредиент для изменения названия: ");
         int num = 1;
 
-        for (Ingredient ingredient : ingredients_list) {
+        for (Ingredient ingredient : DataBase.getIngredientsList()) {
             System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
@@ -146,7 +150,7 @@ public class IngredientsActions {
         System.out.print("Введите новое название: ");
         String new_name = Input.inputString();
 
-        for (Ingredient ingredient : ingredients_list) {
+        for (Ingredient ingredient : DataBase.getIngredientsList()) {
             if (ingredient.getName().equals(new_name)) {
                 System.out.println("Ингредиент с таким названием уже существует!");
                 changeIngredientName();
@@ -154,7 +158,7 @@ public class IngredientsActions {
             }
         }
 
-        ingredients_list.get(choice_ingredient - 1).setName(new_name);
+        DataBase.getIngredientsList().get(choice_ingredient - 1).setName(new_name);
 
         System.out.println("Название успешно изменено!");
         Main.getBaseIngInfo();

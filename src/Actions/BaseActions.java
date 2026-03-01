@@ -2,24 +2,21 @@ package Actions;
 
 import java.util.ArrayList;
 
-import ObjectClasses.Pizza;
+import ObjectClasses.CustomPizza;
 import ObjectClasses.PizzaBase;
+import MainEvent.DataBase;
 import MainEvent.Input;
 import MainEvent.Main;
 
 public class BaseActions {
-    private static ArrayList<PizzaBase> pizza_base_list = new ArrayList<>();
-
-    public static ArrayList<PizzaBase> getPizzaBaseList() {
-        return pizza_base_list;
-    }
+    
 
     public static void createNewPizzaBase() {
         System.out.println(Main.string_separator);
         System.out.print("Введите название основы: ");
         String name_base = Input.inputString();
 
-        for (PizzaBase pizza_base : pizza_base_list) {
+        for (PizzaBase pizza_base : DataBase.getPizzaBaseList()) {
             if (pizza_base.getName().equals(name_base)) {
                 System.out.println("Основа с таким названием уже существует!");
                 createNewPizzaBase();
@@ -27,7 +24,7 @@ public class BaseActions {
             }
         }
                 
-        PizzaBase base = pizza_base_list.get(0); /// Классичекая основа
+        PizzaBase base = DataBase.getPizzaBaseList().get(0); /// Классичекая основа
         float max_price = base.getPrice() * 1.2f;
         System.out.print("Введите цену основы (цена основы не должна превышать 20% классической, максимальная цена основы - " + max_price + "руб.): ");
         float price_base = Input.inputFloat();
@@ -38,15 +35,15 @@ public class BaseActions {
             return;
         }
                 
-        pizza_base_list.add(pizza_base);
+        DataBase.getPizzaBaseList().add(pizza_base);
         System.out.println("Основа успешно добавлена!");
-        Main.createIngAndBase();
+        Main.createThings();
     }
 
     public static void deletePizzaBase() {
-        if (pizza_base_list.isEmpty()) {
+        if (DataBase.getPizzaBaseList().isEmpty()) {
             System.out.println("Вы не создали ни одной основы!");
-            Main.createIngAndBase();
+            Main.createThings();
         }
 
         System.out.println(Main.string_separator);
@@ -54,7 +51,7 @@ public class BaseActions {
                 
         int num = 1;
 
-        for (PizzaBase base1 : pizza_base_list) {
+        for (PizzaBase base1 : DataBase.getPizzaBaseList()) {
             System.out.println(num + ". " + base1.getName() + "\t" + base1.getPrice());
             num++;
         }
@@ -66,34 +63,35 @@ public class BaseActions {
         if (choice_del == 1) {
             System.out.println("Вы не можете удалить классическую основу!");
             deletePizzaBase();
+            return;
         }
         else if (choice_del == num)
-            Main.createIngAndBase();
+            Main.createThings();
 
         else if ((choice_del > num) || (choice_del <= 0)) {
             Main.errorChoice();
-            Main.createIngAndBase();
+            Main.createThings();
         }
 
-        ArrayList<Pizza> pizza_list = Actions.PizzaActions.getPizzaList();
+        ArrayList<CustomPizza> pizza_list = DataBase.getCustomPizzaList();
         int temp = 0;
         if (pizza_list.size() > 0) {
-            for (Pizza pizza : pizza_list) {
-                if (pizza.getBaseInfo().getName().equals(pizza_base_list.get(choice_del - 1).getName())) {
+            for (CustomPizza pizza : pizza_list) {
+                if (pizza.getBaseInfo().getName().equals(DataBase.getPizzaBaseList().get(choice_del - 1).getName())) {
                     System.out.println("Эта основа уже используется в пицце " + pizza.getName() + "!");
                     temp++;
                 }
             }
         }
         if (temp == 0) {
-            pizza_base_list.remove(choice_del - 1);
+            DataBase.getPizzaBaseList().remove(choice_del - 1);
             System.out.println("Основа успешно удалена!");
         }
-        Main.createIngAndBase();
+        Main.createThings();
     }
 
     public static void changePizzaBasePrice() {
-        if (pizza_base_list.isEmpty()) {
+        if (DataBase.getPizzaBaseList().isEmpty()) {
             System.out.println("Вы не создали ни одной основы!");
             Main.getBaseIngInfo();
         }
@@ -102,7 +100,7 @@ public class BaseActions {
         System.out.println("Выберите основу для изменения цены: ");
         int num = 1;
 
-        for (PizzaBase pizza_base : pizza_base_list) {
+        for (PizzaBase pizza_base : DataBase.getPizzaBaseList()) {
             System.out.println(num + ". " + pizza_base.getName() + "\t" + pizza_base.getPrice());
             num++;
         }
@@ -115,7 +113,7 @@ public class BaseActions {
             System.out.print("Введите новую цену: ");
             float new_price_base = Input.inputFloat();
 
-            for (PizzaBase pizza_base : pizza_base_list) {
+            for (PizzaBase pizza_base : DataBase.getPizzaBaseList()) {
                 pizza_base.setPrice(new_price_base * pizza_base.getPercentage());
             }
 
@@ -131,9 +129,9 @@ public class BaseActions {
         }
 
         System.out.println(Main.string_separator);
-        PizzaBase base = pizza_base_list.get(0); /// Классичекая основа
+        PizzaBase base = DataBase.getPizzaBaseList().get(0); /// Классичекая основа
         float max_price = base.getPrice() * 1.2f;
-        PizzaBase cur_PizzaBase = pizza_base_list.get(choice_base - 1);
+        PizzaBase cur_PizzaBase = DataBase.getPizzaBaseList().get(choice_base - 1);
         float cur_price = cur_PizzaBase.getPrice();
 
         System.out.print("Введите цену основы (цена основы не должна превышать 20% классической, максимальная цена основы - " + max_price + "руб.): ");
@@ -151,7 +149,7 @@ public class BaseActions {
     }
 
     public static void changePizzaBaseName() {
-        if (pizza_base_list.isEmpty()) {
+        if (DataBase.getPizzaBaseList().isEmpty()) {
             System.out.println("Вы не создали ни одной основы!");
             Main.getBaseIngInfo();
         }
@@ -160,7 +158,7 @@ public class BaseActions {
         System.out.println("Выберите основу для изменения названия: ");
         int num = 1;
 
-        for (PizzaBase pizza_base : pizza_base_list) {
+        for (PizzaBase pizza_base : DataBase.getPizzaBaseList()) {
             System.out.println(num + ". " + pizza_base.getName() + "\t" + pizza_base.getPrice());
             num++;
         }
@@ -184,7 +182,7 @@ public class BaseActions {
         System.out.print("Введите новое название: ");
         String new_name = Input.inputString();
 
-        for (PizzaBase pizza_base : pizza_base_list) {
+        for (PizzaBase pizza_base : DataBase.getPizzaBaseList()) {
             if (pizza_base.getName().equals(new_name)) {
                 System.out.println("Основа с таким названием уже существует!");
                 changePizzaBaseName();
@@ -192,7 +190,7 @@ public class BaseActions {
             }
         }
 
-        pizza_base_list.get(choice_base - 1).setName(new_name);
+        DataBase.getPizzaBaseList().get(choice_base - 1).setName(new_name);
 
         System.out.println("Название успешно изменено!");
         Main.getBaseIngInfo();
