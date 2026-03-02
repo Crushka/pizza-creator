@@ -385,5 +385,7 @@ public class OrderActions {
         completed_order_list.add(cur_order);
         uncompleted_order_list.remove(choice - 1);
         System.out.println("Заказ успешно создан! Ожидайте его в течении 10 минут!");
+        startOrderActions();
+        return;
     }
 }

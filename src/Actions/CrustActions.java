@@ -79,8 +79,9 @@ public class CrustActions {
 
         System.out.println(Main.string_separator);
         System.out.println("Выберите ингредиенты для бортика:");
+        int num_ing = 1;
         for (Ingredient ingredient : DataBase.getIngredientsList()) {
-            System.out.println(ingredient.getName() + "\t" + ingredient.getPrice());
+            System.out.println(num_ing++ + ingredient.getName() + "\t" + ingredient.getPrice());
         }
 
         ArrayList<Ingredient> crustIngredients = new ArrayList<>();
