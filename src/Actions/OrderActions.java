@@ -49,7 +49,7 @@ public class OrderActions {
         }
 
         System.out.println(Main.string_separator);
-        System.out.println("Фильтр по дате (дд.мм.гггг или пусто — показать все): ");
+        System.out.println("Фильтр по дате дд.мм.гггг (пусто - показать все): ");
         java.time.LocalDate filterDate = Input.inputLocalDate();
         List<Order> toShow = Filtration.filterOrdersByDate(completed_order_list, filterDate);
         if (toShow.isEmpty()) {

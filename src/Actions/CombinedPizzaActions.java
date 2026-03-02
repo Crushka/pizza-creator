@@ -125,7 +125,7 @@ public class CombinedPizzaActions {
         }
 
         CombinedPizza combined_pizza = new CombinedPizza(pizza1, pizza2, chosen_base);
-        for (CombinedPizza pizza : DataBase.getCombinedPizzaList()) { /// Проверка на существование такой же комбинированной пиццы
+        for (CombinedPizza pizza : DataBase.getCombinedPizzaList()) { /// а есть ли эта пицццаца
             if (((pizza.getPizza1() == combined_pizza.getPizza1() && pizza.getPizza2() == combined_pizza.getPizza2())
                 || (pizza.getPizza1() == combined_pizza.getPizza2() && pizza.getPizza2() == combined_pizza.getPizza1()))
                 && (pizza.getBaseInfo() == combined_pizza.getBaseInfo())) {
@@ -136,10 +136,12 @@ public class CombinedPizzaActions {
             }
         }
 
-        for (Crust crust : DataBase.getCrustsList()) { /// Добавление комбинированной пиццы в вайт лист бортиков в которых есть обе пиццы
-            if (crust.getWhiteList().contains(pizza1) && crust.getWhiteList().contains(pizza2)) {
-                combined_pizza.addCrust(crust);
-            }
+        if (!pizza1.getCrustInfo().isEmpty()) {
+            combined_pizza.getCrustInfo().addAll(pizza1.getCrustInfo());
+        }
+
+        if (!pizza2.getCrustInfo().isEmpty()) {
+            combined_pizza.getCrustInfo().addAll(pizza2.getCrustInfo());
         }
 
         DataBase.getCombinedPizzaList().add(combined_pizza);
@@ -490,7 +492,7 @@ public class CombinedPizzaActions {
             return;
         }
 
-        System.out.println("Фильтр по ингредиенту (название или пусто — показать все): ");
+        System.out.println("Фильтр по ингредиенту (пусто - показать все): ");
         String filterName = Input.inputString();
         List<IPizza> to_show = Filtration.filterPizzasByIngredient(new ArrayList<>(DataBase.getCombinedPizzaList()), filterName);
         if (to_show.isEmpty()) {

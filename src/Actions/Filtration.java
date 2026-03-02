@@ -10,15 +10,19 @@ import Order.Order;
 
 public class Filtration {
 
-    public static List<IPizza> filterPizzasByIngredient(List<IPizza> pizzas, String ingredientName) {
-        if (ingredientName == null || ingredientName.isBlank())
+    /// ПИЦЦЫ
+
+    public static List<IPizza> filterPizzasByIngredient(List<IPizza> pizzas, String ingredient_name) {
+        if (ingredient_name == null || ingredient_name.isBlank())
             return new ArrayList<>(pizzas);
-        String lower = ingredientName.trim().toLowerCase();
+        String lower = ingredient_name.trim().toLowerCase();
         return pizzas.stream()
             .filter(p -> p.getIngredientInfo().stream()
                 .anyMatch(ing -> ing.getName().toLowerCase().contains(lower)))
             .collect(Collectors.toList());
     }
+
+    /// ЗАКАЗЫ
 
     public static List<Order> filterOrdersByDate(List<Order> orders, LocalDate date) {
         if (date == null)
@@ -27,6 +31,8 @@ public class Filtration {
             .filter(o -> o.getOrderTime() != null && o.getOrderTime().toLocalDate().equals(date))
             .collect(Collectors.toList());
     }
+
+    /// ИНГРЕДИЕНТЫ
 
     public static List<Ingredient> filterIngredientsByName(List<Ingredient> ingredients, String name) {
         if (name == null || name.isBlank())
@@ -37,6 +43,8 @@ public class Filtration {
             .collect(Collectors.toList());
     }
 
+    /// ОСНОВЫ
+
     public static List<PizzaBase> filterBasesByName(List<PizzaBase> bases, String name) {
         if (name == null || name.isBlank())
             return new ArrayList<>(bases);
@@ -46,12 +54,24 @@ public class Filtration {
             .collect(Collectors.toList());
     }
 
+    /// БОРТИКИ
+
     public static List<Crust> filterCrustsByName(List<Crust> crusts, String name) {
         if (name == null || name.isBlank())
             return new ArrayList<>(crusts);
         String lower = name.trim().toLowerCase();
         return crusts.stream()
             .filter(c -> c.getName().toLowerCase().contains(lower))
+            .collect(Collectors.toList());
+    }
+
+    public static List<Crust> filterCrustsByIngredients(List<Crust> crusts, String ingredient_name) {
+        if (ingredient_name == null || ingredient_name.isBlank())
+            return new ArrayList<>(crusts);
+        String lower = ingredient_name.trim().toLowerCase();
+        return crusts.stream()
+            .filter(c -> c.getIngredients().stream()
+                .anyMatch(ing -> ing.getName().toLowerCase().contains(lower)))
             .collect(Collectors.toList());
     }
 }

@@ -54,7 +54,7 @@ public class Input {
         try {
             return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         } catch (DateTimeParseException e) {
-            System.out.println("Неверный формат даты! Используйте дд.мм.гггг (например 03.05.2025).");
+            System.out.println("Неверный формат даты! Используйте дд.мм.гггг (например 16.02.2007).");
             return inputLocalDate();
         }
     }

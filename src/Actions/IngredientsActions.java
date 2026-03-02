@@ -57,7 +57,7 @@ public class IngredientsActions {
         Ingredient deletedIngredient = DataBase.getIngredientsList().get(choice_del - 1);
         DataBase.getIngredientsList().remove(choice_del - 1);
 
-        for (IPizza pizza : DataBase.getAllPizzaList()) { /// Удаление ингредиента из пицц, в которых он есть
+        for (IPizza pizza : DataBase.getAllPizzaList()) { /// УДАЛЯЕМ ИНГРЕДИЕНТ ИЗ ПИПЦЦ
             java.util.Iterator<Ingredient> it = pizza.getIngredientInfo().iterator();
             while (it.hasNext()) {
                 if (it.next().getName().equals(deletedIngredient.getName())) {
@@ -66,7 +66,7 @@ public class IngredientsActions {
             }
         }
 
-        for (Crust crust : DataBase.getCrustsList()) { /// Удаление ингредиента из бортиках, в которых он есть
+        for (Crust crust : DataBase.getCrustsList()) { /// УДАЛЯЕМ ИНГРЕДИЕНТ ИЗ БОРТОВ
             java.util.Iterator<Ingredient> it = crust.getIngredients().iterator();
             while (it.hasNext()) {
                 if (it.next().getName().equals(deletedIngredient.getName())) {

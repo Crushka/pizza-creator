@@ -24,7 +24,7 @@ public class BaseActions {
             }
         }
                 
-        PizzaBase base = DataBase.getPizzaBaseList().get(0); /// Классичекая основа
+        PizzaBase base = DataBase.getPizzaBaseList().get(0);
         float max_price = base.getPrice() * 1.2f;
         System.out.print("Введите цену основы (цена основы не должна превышать 20% классической, максимальная цена основы - " + max_price + "руб.): ");
         float price_base = Input.inputFloat();
@@ -129,7 +129,7 @@ public class BaseActions {
         }
 
         System.out.println(Main.string_separator);
-        PizzaBase base = DataBase.getPizzaBaseList().get(0); /// Классичекая основа
+        PizzaBase base = DataBase.getPizzaBaseList().get(0);
         float max_price = base.getPrice() * 1.2f;
         PizzaBase cur_PizzaBase = DataBase.getPizzaBaseList().get(choice_base - 1);
         float cur_price = cur_PizzaBase.getPrice();

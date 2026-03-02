@@ -168,9 +168,34 @@ public class CrustActions {
 
     public static void getCrustInfo() {
         System.out.println(Main.string_separator);
-        System.out.println("Фильтр по названию бортика (пусто — показать все): ");
-        String filterName = Input.inputString();
-        List<Crust> toShow = Filtration.filterCrustsByName(DataBase.getCrustsList(), filterName);
+        System.out.println("Выберите фильтр:");
+        System.out.println("1. Фильтр по названию бортика");
+        System.out.println("2. Фильтр по ингредиенту");
+
+        System.out.println(Main.string_separator);
+        System.out.println("Введите номер: ");
+        int filter_choice = Input.inputInt();
+
+        List<Crust> toShow;
+        switch (filter_choice) {
+            case 1:
+                System.out.println(Main.string_separator);
+                System.out.println("Фильтр по названию бортика (пусто - показать все): ");
+                String filter_name = Input.inputString();
+                toShow = Filtration.filterCrustsByName(DataBase.getCrustsList(), filter_name);
+                break;
+            case 2:
+                System.out.println(Main.string_separator);
+                System.out.println("Фильтр по ингредиенту (пусто - показать все): ");
+                String filter_ing = Input.inputString();
+                toShow = Filtration.filterCrustsByIngredients(DataBase.getCrustsList(), filter_ing);
+                break;
+            default:
+                Main.errorChoice();
+                getCrustInfo();
+                return;
+        }
+        
         int num = 1;
         for (Crust crust : toShow) {
             System.out.println(num++ + ". " + crust.toString());
