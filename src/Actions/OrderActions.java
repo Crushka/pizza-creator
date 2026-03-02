@@ -147,8 +147,10 @@ public class OrderActions {
         Order order = new Order(pizzas, comment);
         addPizzas(order, false);
 
-        uncompleted_order_list.add(order);
-        System.out.println("Заказ успешно создан!");
+        if (!order.getPizzas().isEmpty()) {
+            uncompleted_order_list.add(order);
+            System.out.println("Заказ успешно создан!");
+        }
     }
 
     public static void editUncompletedOrder() {
@@ -156,7 +158,7 @@ public class OrderActions {
             System.out.println(Main.string_separator);   
             System.out.print("Выберите номер заказа для редактирования: ");
             int choice = Input.inputInt();
-            if ((choice >= uncompleted_order_list.size()) || (choice < 1)) {
+            if ((choice > uncompleted_order_list.size()) || (choice < 1)) {
                 Main.errorChoice();
                 editUncompletedOrder();
                 return;

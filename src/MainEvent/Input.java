@@ -11,6 +11,10 @@ public class Input {
     public static int inputInt() {
         try {
             int num = scanner.nextInt();
+            if (num < 0) {
+                System.out.println("Ошибка! Введите неотрицательное число *-*!");
+                return inputInt();
+            }
             scanner.nextLine();
             return num;
         } catch (Exception e) {
@@ -23,6 +27,10 @@ public class Input {
     public static float inputFloat() {
         try {
             float num = scanner.nextFloat();
+            if (num < 0) {
+                System.out.println("Ошибка! Введите неотрицательное число *-*!");
+                return inputInt();
+            }
             scanner.nextLine();
             return num;
         } catch (Exception e) {
