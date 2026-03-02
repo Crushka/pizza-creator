@@ -470,7 +470,7 @@ public class PizzaActions {
     /// БЛОК СИСТЕМНЫХ ПИЦЦ
 
     private static List<IPizza> askFilterPizzasByIngredient(List<IPizza> pizzas) {
-        System.out.println("Фильтр по ингредиенту (название или пусто - показать все): ");
+        System.out.println("Фильтр по ингредиенту (оставьте строку пустой для вывода всех элементов): ");
         String name = Input.inputString();
         return Filtration.filterPizzasByIngredient(pizzas, name);
     }

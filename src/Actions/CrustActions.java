@@ -180,13 +180,13 @@ public class CrustActions {
         switch (filter_choice) {
             case 1:
                 System.out.println(Main.string_separator);
-                System.out.println("Фильтр по названию бортика (пусто - показать все): ");
+                System.out.println("Фильтр по названию бортика (оставьте строку пустой для вывода всех элементов): ");
                 String filter_name = Input.inputString();
                 toShow = Filtration.filterCrustsByName(DataBase.getCrustsList(), filter_name);
                 break;
             case 2:
                 System.out.println(Main.string_separator);
-                System.out.println("Фильтр по ингредиенту (пусто - показать все): ");
+                System.out.println("Фильтр по ингредиенту (оставьте строку пустой для вывода всех элементов): ");
                 String filter_ing = Input.inputString();
                 toShow = Filtration.filterCrustsByIngredients(DataBase.getCrustsList(), filter_ing);
                 break;

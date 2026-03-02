@@ -166,7 +166,7 @@ public class Main {
 
     public static void getBaseIngInfo() {
         System.out.println(string_separator);
-        System.out.println("Фильтр по названию (пусто — показать все): ");
+        System.out.println("Фильтр по названию (оставьте строку пустой для вывода всех элементов): ");
         String filterName = Input.inputString();
         List<Ingredient> ingredientsToShow = Filtration.filterIngredientsByName(DataBase.getIngredientsList(), filterName);
         List<PizzaBase> basesToShow = Filtration.filterBasesByName(DataBase.getPizzaBaseList(), filterName);

@@ -492,7 +492,7 @@ public class CombinedPizzaActions {
             return;
         }
 
-        System.out.println("Фильтр по ингредиенту (пусто - показать все): ");
+        System.out.println("Фильтр по ингредиенту (оставьте строку пустой для вывода всех элементов): ");
         String filterName = Input.inputString();
         List<IPizza> to_show = Filtration.filterPizzasByIngredient(new ArrayList<>(DataBase.getCombinedPizzaList()), filterName);
         if (to_show.isEmpty()) {
