@@ -68,16 +68,26 @@ public class SystemPizza implements IPizza {
         return pizza_base;
     }
 
+    public float getMarkup() {
+        return markup;
+    }
+
+    public SystemPizza copy() {
+        ArrayList<Ingredient> ingredientsCopy = new ArrayList<>(this.ingredients);
+        ArrayList<Crust> crustsCopy = new ArrayList<>(this.crusts);
+        return new SystemPizza(this.name, this.pizza_base, this.markup, ingredientsCopy, crustsCopy);
+    }
+
     public void ingredientsDouble() {
         if (ingredients.size() == 0) {
             return;
         }
-        ArrayList<Ingredient> newIngredients = new ArrayList<>();
+        ArrayList<Ingredient> new_ingredients = new ArrayList<>();
         for (Ingredient ingredient : ingredients) {
-            newIngredients.add(ingredient);
-            newIngredients.add(ingredient);
+            new_ingredients.add(ingredient);
+            new_ingredients.add(ingredient);
         }
-        ingredients = newIngredients;
+        ingredients = new_ingredients;
     }
 
     @Override

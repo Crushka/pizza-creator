@@ -237,16 +237,16 @@ public class OrderActions {
         System.out.println(Main.string_separator);
         System.out.print("Выберите номера пицц для заказа (формат: номер-размер, например: 1-0.5, 4-1, 2-2): ");
         String input = Input.inputString();
-        String[] pizzaEntries = input.trim().split(",");
+        String[] pizza_entries = input.trim().split(",");
 
-        if (pizzaEntries[0].trim().equals(String.valueOf(global_num))) {
+        if (pizza_entries[0].trim().equals(String.valueOf(global_num))) {
             if (!from_edit) Main.home();
             else editUncompletedOrder();
             return;
         }
 
-        ArrayList<PizzaWithSize> selectedPizzas = new ArrayList<>();
-        for (String entry : pizzaEntries) {
+        ArrayList<PizzaWithSize> selected_pizzas = new ArrayList<>();
+        for (String entry : pizza_entries) {
             entry = entry.trim();
             try {
                 String[] parts = entry.split("-");
@@ -276,7 +276,7 @@ public class OrderActions {
                     else {
                         pizza = DataBase.getCombinedPizzaList().get(pizzaNum - customSize - systemSize - 1);
                     }
-                    selectedPizzas.add(new PizzaWithSize(pizza, sizeCoefficient));
+                    selected_pizzas.add(new PizzaWithSize(pizza, sizeCoefficient));
                 } else {
                     System.out.println("Номер пиццы " + pizzaNum + " вне диапазона!");
                 }
@@ -285,14 +285,46 @@ public class OrderActions {
             }
         }
 
-        if (selectedPizzas.isEmpty()) {
+        if (selected_pizzas.isEmpty()) {
             System.out.println("Вы не выбрали ни одной пиццы!");
             if (!from_edit) createOrder();
             else editUncompletedOrder();
             return;
         }
 
-        order.addPizza(selectedPizzas);
+        for (int i = 0; i < selected_pizzas.size(); i++) {
+            PizzaWithSize sized_pizza = selected_pizzas.get(i);
+            if (sized_pizza.getPizza() instanceof SystemPizza) {
+                System.out.println(Main.string_separator);
+                System.out.println("Желаете ли вы удвоить ингредиенты в выбранной пицце " + sized_pizza.getPizza().getName() + "?");
+
+                while (true) {
+                    System.out.print("Введите номер (1 - да / 2 - нет): ");
+                    int double_choice = Input.inputInt();
+
+                    if (double_choice == 1) {
+                        SystemPizza orig = (SystemPizza) sized_pizza.getPizza();
+                        SystemPizza cloned = orig.copy();
+                        cloned.ingredientsDouble();
+
+                        PizzaWithSize new_sized = new PizzaWithSize(cloned, sized_pizza.getSizeCoefficient());
+                        selected_pizzas.set(i, new_sized);
+
+                        System.out.println("Ингредиенты удвоены!");
+                        break;
+                    }
+                    else if (double_choice == 2) {
+                        break;
+                    }
+                    else {
+                        Main.errorChoice();
+                        continue;
+                    }
+                }
+            }
+        }
+
+        order.addPizza(selected_pizzas);
     }
 
     public static void editPizzaSize(Order order) {

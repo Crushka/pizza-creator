@@ -468,7 +468,7 @@ public class CombinedPizzaActions {
     public static void deleteCombinedPizza(CombinedPizza pizza) {
         System.out.println(Main.string_separator);
 
-        for (Crust crust : DataBase.getCrustsList()) { /// Удаление пиццы из вайт листа бортиков
+        for (Crust crust : DataBase.getCrustsList()) {
             java.util.Iterator<IPizza> it = crust.getWhiteList().iterator();
             while (it.hasNext()) {
                 if (it.next().getName().equals(pizza.getName())) {
