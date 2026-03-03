@@ -5,6 +5,7 @@ import java.util.List;
 
 import MainEvent.*;
 import ObjectClasses.*;
+import Order.Order;
 
 public class PizzaActions {
 
@@ -92,6 +93,15 @@ public class PizzaActions {
                     if ((combined_pizza.getPizza1() == cur_pizza) || (combined_pizza.getPizza2() == cur_pizza)) {
                         isInCombPizza = true;
                         System.out.println("Вы не можете удалить эту пиццу, так как она уже содержится в комбинированной пицце " + combined_pizza.getName() + "!");
+                    }
+                }
+
+                for (Order order : OrderActions.getUncompletedOrderList()) {
+                    java.util.Iterator<PizzaWithSize> it = order.getPizzas().iterator();
+                    while (it.hasNext()) {
+                        if (it.next().getPizza().getName().equals(cur_pizza.getName())) {
+                            it.remove();
+                        }
                     }
                 }
 

@@ -114,6 +114,7 @@ public class BaseActions {
             float new_price_base = Input.inputFloat();
 
             for (PizzaBase pizza_base : DataBase.getPizzaBaseList()) {
+                
                 pizza_base.setPrice(new_price_base * pizza_base.getPercentage());
             }
 

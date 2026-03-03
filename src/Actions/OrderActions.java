@@ -11,6 +11,10 @@ public class OrderActions {
     private static ArrayList<Order> uncompleted_order_list = new ArrayList<>();
     private static ArrayList<Order> completed_order_list = new ArrayList<>();
 
+    public static ArrayList<Order> getUncompletedOrderList() {
+        return uncompleted_order_list;
+    }
+
     public static void startOrderActions() {
         while (true) {
             System.out.println(Main.string_separator);

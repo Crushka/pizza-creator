@@ -19,7 +19,7 @@ public class Main {
 
     private static void createBaseIng() {
         DataBase.getPizzaBaseList().add(new PizzaBase("Classic", 80, 1));
-        DataBase.getPizzaBaseList().add(new PizzaBase("Cheese", 95, 95 / DataBase.getPizzaBaseList().get(0).getPercentage()));
+        DataBase.getPizzaBaseList().add(new PizzaBase("Cheese", 95, 095f / DataBase.getPizzaBaseList().get(0).getPercentage()));
 
         DataBase.getIngredientsList().add(new Ingredient("Tomatoes", 50));
         DataBase.getIngredientsList().add(new Ingredient("Mushrooms", 70));
