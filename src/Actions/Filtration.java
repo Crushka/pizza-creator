@@ -28,7 +28,7 @@ public class Filtration {
         if (date == null)
             return new ArrayList<>(orders);
         return orders.stream()
-            .filter(o -> o.getOrderTime() != null && o.getOrderTime().toLocalDate().equals(date))
+            .filter(o -> o.getOrderTime() != null && !o.getOrderTime().toLocalDate().isBefore(date))
             .collect(Collectors.toList());
     }
 

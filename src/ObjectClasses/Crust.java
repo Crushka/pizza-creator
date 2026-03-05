@@ -1,6 +1,8 @@
 package ObjectClasses;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Crust {
     private String name;
@@ -15,6 +17,14 @@ public class Crust {
 
     public boolean isCompatibleWithPizza(IPizza pizza) {
         return white_listed_pizzas.contains(pizza);
+    }
+
+    public void removeIngredient(String name) {
+        ingredients.removeIf(ing -> ing.getName().equals(name));
+    }
+
+    public void removePizzaFromWhiteList(String pizzaName) {
+        white_listed_pizzas.removeIf(p -> p.getName().equals(pizzaName));
     }
 
     public void setName(String name) {
@@ -33,12 +43,32 @@ public class Crust {
         return price;
     }
 
-    public ArrayList<Ingredient> getIngredients() {
-        return ingredients;
+    public List<Ingredient> getIngredients() {
+        return Collections.unmodifiableList(ingredients);
     }
 
-    public ArrayList<IPizza> getWhiteList() {
-        return white_listed_pizzas;
+    public void addIngredient(Ingredient ingredient) {
+        ingredients.add(ingredient);
+    }
+
+    public void deleteIngredient(Ingredient ingredient) {
+        ingredients.remove(ingredient);
+    } public void deleteIngredient(int index) {
+        ingredients.remove(index);
+    }
+
+    public List<IPizza> getWhiteList() {
+        return Collections.unmodifiableList(white_listed_pizzas);
+    }
+
+    public void addToWhiteList(IPizza pizza) {
+        white_listed_pizzas.add(pizza);
+    }
+
+    public void deleteFromWhiteList(IPizza pizza) {
+        white_listed_pizzas.remove(pizza);
+    } public void deleteFromWhiteList(int index) {
+        white_listed_pizzas.remove(index);
     }
 
     @Override

@@ -6,9 +6,9 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Input {
-    public static Scanner scanner = new Scanner(System.in, "Windows-1251");
+    public Scanner scanner = new Scanner(System.in, "Windows-1251");
 
-    public static int inputInt() {
+    public int inputInt() {
         try {
             int num = scanner.nextInt();
             if (num < 0) {
@@ -24,7 +24,7 @@ public class Input {
         }
     }
 
-    public static float inputFloat() {
+    public float inputFloat() {
         try {
             float num = scanner.nextFloat();
             if (num < 0) {
@@ -40,7 +40,7 @@ public class Input {
         }
     }
 
-    public static LocalDateTime inputDateTime() {
+    public LocalDateTime inputDateTime() {
         LocalDateTime orderTime;
         String dateTimeInput = inputString();
         if (dateTimeInput.isEmpty()) {
@@ -55,7 +55,7 @@ public class Input {
         return orderTime;
     }
 
-    public static LocalDate inputLocalDate() {
+    public LocalDate inputLocalDate() {
         String s = inputString().trim();
         if (s.isEmpty())
             return null;
@@ -67,12 +67,12 @@ public class Input {
         }
     }
 
-    public static String inputString() {
+    public String inputString() {
         String str = scanner.nextLine();
         return str;
     }
 
-    public static void onClose() {
+    public void onClose() {
         try {
             scanner.close();
         } catch (Exception e) {

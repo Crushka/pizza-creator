@@ -1,13 +1,14 @@
 package ObjectClasses;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface IPizza {
     String getName();
     float getPrice();
-    ArrayList<Ingredient> getIngredientInfo();
+    List<Ingredient> getIngredientInfo();
     void addCrust(Crust crust);
-    void delCrust(Crust crust);
-    ArrayList<Crust> getCrustInfo();
+    void delCrust(Crust crust); void delCrust(int index);
+    List<Crust> getCrustInfo();
     PizzaBase getBaseInfo();
+    void removeIngredient(String name);
 }

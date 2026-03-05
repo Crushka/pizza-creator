@@ -1,6 +1,8 @@
 package ObjectClasses;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public class CombinedPizza implements IPizza {
@@ -17,6 +19,10 @@ public class CombinedPizza implements IPizza {
             throw new IllegalArgumentException("Комбинированные пиццы должны иметь основу первой или второй пиццы.");
         }
         this.pizza_base = pizza_base;
+    }
+
+    public void addCrusts(List<Crust> crusts) {
+        this.crusts.addAll(crusts);
     }
 
     public void setPizza1(IPizza pizza) {
@@ -78,11 +84,13 @@ public class CombinedPizza implements IPizza {
     @Override
     public void delCrust(Crust crust) {
         crusts.remove(crust);
+    } public void delCrust(int index) {
+        crusts.remove(index);
     }
 
     @Override
-    public ArrayList<Crust> getCrustInfo() {
-        return crusts;
+    public List<Crust> getCrustInfo() {
+        return Collections.unmodifiableList(crusts);
     }
 
     @Override
@@ -109,5 +117,11 @@ public class CombinedPizza implements IPizza {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public void removeIngredient(String name) {
+        pizza1.removeIngredient(name);
+        pizza2.removeIngredient(name);
     }
 }

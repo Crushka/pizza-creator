@@ -24,6 +24,10 @@ public class Order {
         this.order_time = order_time;
     }
 
+    public void removePizzaByName(String pizzaName) {
+        pizzas.removeIf(p -> p.getPizza().getName().equals(pizzaName));
+    }
+
     public UUID getOrderId() {
         return order_id;
     }

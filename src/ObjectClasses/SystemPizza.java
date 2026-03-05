@@ -1,6 +1,8 @@
 package ObjectClasses;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public class SystemPizza implements IPizza {
@@ -40,6 +42,10 @@ public class SystemPizza implements IPizza {
         this.crusts = new ArrayList<>();
     }
 
+    public void removeIngredient(String name) {
+        ingredients.removeIf(ing -> ing.getName().equals(name));
+    }
+
     @Override
     public String getName() {
         return name;
@@ -59,8 +65,18 @@ public class SystemPizza implements IPizza {
     }
 
     @Override
-    public ArrayList<Ingredient> getIngredientInfo() {
-        return ingredients;
+    public List<Ingredient> getIngredientInfo() {
+        return Collections.unmodifiableList(ingredients);
+    }
+
+    public void addIngredient(Ingredient ingredient) {
+        ingredients.add(ingredient);
+    }
+
+    public void deleteIngredient(Ingredient ingredient) {
+        ingredients.remove(ingredient);
+    } public void deleteIngredient(int index) {
+        ingredients.remove(index);
     }
 
     @Override
@@ -100,11 +116,13 @@ public class SystemPizza implements IPizza {
     @Override
     public void delCrust(Crust crust) {
         crusts.remove(crust);
+    } public void delCrust(int index) {
+        crusts.remove(index);
     }
 
     @Override
-    public ArrayList<Crust> getCrustInfo() {
-        return crusts;
+    public List<Crust> getCrustInfo() {
+        return Collections.unmodifiableList(crusts);
     }
 
     @Override

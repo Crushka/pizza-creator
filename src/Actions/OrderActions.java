@@ -8,23 +8,27 @@ import MainEvent.*;
 import ObjectClasses.*;
 
 public class OrderActions {
-    private static ArrayList<Order> uncompleted_order_list = new ArrayList<>();
-    private static ArrayList<Order> completed_order_list = new ArrayList<>();
 
-    public static ArrayList<Order> getUncompletedOrderList() {
-        return uncompleted_order_list;
+    DataBase dataBase;
+    HomeActions homeActions;
+    Input input;
+
+    public OrderActions(DataBase dataBase, Input input, HomeActions homeActions) {
+        this.dataBase = dataBase;
+        this.input = input;
+        this.homeActions = homeActions;
     }
 
-    public static void startOrderActions() {
+    public void startOrderActions() {
         while (true) {
-            System.out.println(Main.string_separator);
+            System.out.println(homeActions.string_separator);
             System.out.println("1. Создать заказ");
             System.out.println("2. Просмотреть незавершенные заказы");
             System.out.println("3. Просмотреть историю заказов");
             System.out.println("4. Назад");
 
             System.out.print("Выберите действие: ");
-            int choice = Input.inputInt();
+            int choice = input.inputInt();
 
             switch (choice) {
                 case 1:
@@ -37,25 +41,25 @@ public class OrderActions {
                     viewCompletedOrders();
                     break;
                 case 4:
-                    Main.home();
+                    homeActions.home();
                     return;
                 default:
-                    Main.errorChoice();
+                    homeActions.errorChoice();
             }
         }
     }
 
-    public static void viewCompletedOrders() {
-        if (completed_order_list.isEmpty()) {
+    public void viewCompletedOrders() {
+        if (dataBase.getCompletedOrdersList().isEmpty()) {
             System.out.println("Нет завершенных заказов для отображения.");
             startOrderActions();
             return;
         }
 
-        System.out.println(Main.string_separator);
-        System.out.println("Фильтр по дате дд.мм.гггг (пусто - показать все): ");
-        java.time.LocalDate filterDate = Input.inputLocalDate();
-        List<Order> toShow = Filtration.filterOrdersByDate(completed_order_list, filterDate);
+        System.out.println(homeActions.string_separator);
+        System.out.println("Показать заказы начиная с даты дд.мм.гггг (пусто - показать все): ");
+        java.time.LocalDate filterDate = input.inputLocalDate();
+        List<Order> toShow = Filtration.filterOrdersByDate(dataBase.getCompletedOrdersList(), filterDate);
         if (toShow.isEmpty()) {
             System.out.println("Нет заказов за выбранную дату.");
         } else {
@@ -68,40 +72,40 @@ public class OrderActions {
         }
 
         while (true) {
-            System.out.println(Main.string_separator);
+            System.out.println(homeActions.string_separator);
             System.out.println("Выберите действие:");
             System.out.println("1. Назад");
 
             System.out.print("Введите номер: ");
-            int choice = Input.inputInt();
+            int choice = input.inputInt();
 
             switch (choice) {
                 case 1:
                     startOrderActions();
                     break;
                 default:
-                    Main.errorChoice();
+                    homeActions.errorChoice();
             }
         }
     }
 
-    public static void viewUncompletedOrders() {
-        if (uncompleted_order_list.isEmpty()) {
+    public void viewUncompletedOrders() {
+        if (dataBase.getUncompletedOrdersList().isEmpty()) {
             System.out.println("Нет заказов для отображения.");
             startOrderActions();
             return;
         }
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Список заказов:");
         int num = 1;
-        for (Order order : uncompleted_order_list) {
+        for (Order order : dataBase.getUncompletedOrdersList()) {
             System.out.println(num + ". " + order.toString());
             num++;
         }
 
         while (true) {
-            System.out.println(Main.string_separator);
+            System.out.println(homeActions.string_separator);
             System.out.println("Выберите действие:");
             System.out.println("1. Удалить заказ");
             System.out.println("2. Изменить заказ");
@@ -109,7 +113,7 @@ public class OrderActions {
             System.out.println("4. Назад");
 
             System.out.print("Введите номер: ");
-            int choice = Input.inputInt();
+            int choice = input.inputInt();
 
             switch (choice) {
                 case 1:
@@ -125,50 +129,51 @@ public class OrderActions {
                     startOrderActions();
                     break;
                 default:
-                    Main.errorChoice();
+                    homeActions.errorChoice();
             }
         }
     }
 
-    public static void deleteOrder() {
+    public void deleteOrder() {
         System.out.print("Введите номер заказа для удаления: ");
-        int input = Input.inputInt();
+        int inp = input.inputInt();
 
-        if (input >= 1 && input <= uncompleted_order_list.size()) {
-            uncompleted_order_list.remove(input - 1);
+        if (inp >= 1 && inp <= dataBase.getUncompletedOrdersList().size()) {
+            Order del_order = dataBase.getUncompletedOrdersList().get(inp - 1);
+            dataBase.deleteUncompletedOrder(del_order);
             System.out.println("Заказ удален.");
         } else {
             System.out.println("Неверный номер заказа.");
         }
     }
 
-    public static void createOrder() {
-        System.out.println(Main.string_separator);
+    public void createOrder() {
+        System.out.println(homeActions.string_separator);
         System.out.print("Введите комментарий к заказу (или оставьте пустым): ");
-        String comment = Input.inputString();
+        String comment = input.inputString();
 
         ArrayList<PizzaWithSize> pizzas = new ArrayList<>();
         Order order = new Order(pizzas, comment);
         addPizzas(order, false);
 
         if (!order.getPizzas().isEmpty()) {
-            uncompleted_order_list.add(order);
+            dataBase.addUncompletedOrderToList(order);
             System.out.println("Заказ успешно создан!");
         }
     }
 
-    public static void editUncompletedOrder() {
+    public void editUncompletedOrder() {
         while (true) {
-            System.out.println(Main.string_separator);   
+            System.out.println(homeActions.string_separator);   
             System.out.print("Выберите номер заказа для редактирования: ");
-            int choice = Input.inputInt();
-            if ((choice > uncompleted_order_list.size()) || (choice < 1)) {
-                Main.errorChoice();
+            int choice = input.inputInt();
+            if ((choice > dataBase.getUncompletedOrdersList().size()) || (choice < 1)) {
+                homeActions.errorChoice();
                 editUncompletedOrder();
                 return;
             }
 
-            Order cur_order = uncompleted_order_list.get(choice - 1);
+            Order cur_order = dataBase.getUncompletedOrdersList().get(choice - 1);
             System.out.println("Выберите действие:");
             System.out.println("1. Изменить комментарий");
             System.out.println("2. Добавить ещё пиццы!");
@@ -177,7 +182,7 @@ public class OrderActions {
             System.out.println("5. Назад");
 
             System.out.print("Введите номер: ");
-            int order_choice = Input.inputInt();
+            int order_choice = input.inputInt();
 
             switch (order_choice) {
                 case 1:
@@ -196,55 +201,55 @@ public class OrderActions {
                     viewUncompletedOrders();
                     break;
                 default:
-                    Main.errorChoice();
+                    homeActions.errorChoice();
                     break;
             }
         }
     }
 
-    public static void changeComment(Order order) {
-        System.out.println(Main.string_separator);
+    public void changeComment(Order order) {
+        System.out.println(homeActions.string_separator);
         System.out.print("Введите новый комментарий: ");
 
-        String new_comment = Input.inputString();
+        String new_comment = input.inputString();
         order.setComment(new_comment);
         System.out.println("Комментарий успешно изменён!");
         editUncompletedOrder();
     }
 
-    public static void addPizzas(Order order, boolean from_edit) {
-        System.out.println(Main.string_separator);
+    public void addPizzas(Order order, boolean from_edit) {
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите пиццу:");
         
         int global_num = 1;
         System.out.println("Пиццы пользователя:");
-        for (CustomPizza pizza : DataBase.getCustomPizzaList()) {
+        for (CustomPizza pizza : dataBase.getCustomPizzaList()) {
             System.out.println(global_num + ". " + pizza.toString());
             global_num++;
         }
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Пиццы в системе:");
-        for (SystemPizza pizza : DataBase.getSystemPizzaList()) {
+        for (SystemPizza pizza : dataBase.getSystemPizzaList()) {
             System.out.println(global_num + ". " + pizza.toString());
             global_num++;
         }
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Комбинированные пиццы:");
-        for (CombinedPizza pizza : DataBase.getCombinedPizzaList()) {
+        for (CombinedPizza pizza : dataBase.getCombinedPizzaList()) {
             System.out.println(global_num + ". " + pizza.toString());
             global_num++;
         }
         System.out.println(global_num + ". Назад");
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.print("Выберите номера пицц для заказа (формат: номер-размер, например: 1-0.5, 4-1, 2-2): ");
-        String input = Input.inputString();
-        String[] pizza_entries = input.trim().split(",");
+        String inp = input.inputString();
+        String[] pizza_entries = inp.trim().split(",");
 
         if (pizza_entries[0].trim().equals(String.valueOf(global_num))) {
-            if (!from_edit) Main.home();
+            if (!from_edit) homeActions.home();
             else editUncompletedOrder();
             return;
         }
@@ -269,16 +274,16 @@ public class OrderActions {
                 
                 if (pizzaNum >= 1 && pizzaNum < global_num) {
                     IPizza pizza = null;
-                    int customSize = DataBase.getCustomPizzaList().size();
-                    int systemSize = DataBase.getSystemPizzaList().size();
+                    int customSize = dataBase.getCustomPizzaList().size();
+                    int systemSize = dataBase.getSystemPizzaList().size();
                     if (pizzaNum <= customSize) {
-                        pizza = DataBase.getCustomPizzaList().get(pizzaNum - 1);
+                        pizza = dataBase.getCustomPizzaList().get(pizzaNum - 1);
                     } 
                     else if (pizzaNum <= customSize + systemSize) {
-                        pizza = DataBase.getSystemPizzaList().get(pizzaNum - customSize - 1);
+                        pizza = dataBase.getSystemPizzaList().get(pizzaNum - customSize - 1);
                     } 
                     else {
-                        pizza = DataBase.getCombinedPizzaList().get(pizzaNum - customSize - systemSize - 1);
+                        pizza = dataBase.getCombinedPizzaList().get(pizzaNum - customSize - systemSize - 1);
                     }
                     selected_pizzas.add(new PizzaWithSize(pizza, sizeCoefficient));
                 } else {
@@ -299,12 +304,12 @@ public class OrderActions {
         for (int i = 0; i < selected_pizzas.size(); i++) {
             PizzaWithSize sized_pizza = selected_pizzas.get(i);
             if (sized_pizza.getPizza() instanceof SystemPizza) {
-                System.out.println(Main.string_separator);
+                System.out.println(homeActions.string_separator);
                 System.out.println("Желаете ли вы удвоить ингредиенты в выбранной пицце " + sized_pizza.getPizza().getName() + "?");
 
                 while (true) {
                     System.out.print("Введите номер (1 - да / 2 - нет): ");
-                    int double_choice = Input.inputInt();
+                    int double_choice = input.inputInt();
 
                     if (double_choice == 1) {
                         SystemPizza orig = (SystemPizza) sized_pizza.getPizza();
@@ -321,7 +326,7 @@ public class OrderActions {
                         break;
                     }
                     else {
-                        Main.errorChoice();
+                        homeActions.errorChoice();
                         continue;
                     }
                 }
@@ -331,8 +336,8 @@ public class OrderActions {
         order.addPizza(selected_pizzas);
     }
 
-    public static void editPizzaSize(Order order) {
-        System.out.println(Main.string_separator);
+    public void editPizzaSize(Order order) {
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите пиццу для изменения размера:");
         ArrayList<PizzaWithSize> pizzas = order.getPizzas();
 
@@ -344,7 +349,7 @@ public class OrderActions {
 
         while (true) {
             System.out.print("Введите номер: ");
-            int pizza_num = Input.inputInt();
+            int pizza_num = input.inputInt();
 
             if (pizza_num == num) {
                 editUncompletedOrder();
@@ -354,7 +359,7 @@ public class OrderActions {
             if ((pizza_num > 0) && (pizza_num < num)) {
                 PizzaWithSize cur_pizza = pizzas.get(pizza_num - 1);
                 System.out.print("Введите новый размер для пиццы (0.5 - 1 - 2): ");
-                float new_size = Input.inputFloat();
+                float new_size = input.inputFloat();
 
                 cur_pizza.setSizeCoefficient(new_size);
                 System.out.println("Размер успешно задан!");
@@ -362,13 +367,13 @@ public class OrderActions {
                 return;
             }
             else {
-                Main.errorChoice();
+                homeActions.errorChoice();
             }
         }
     }
 
-    public static void deletePizza(Order order) {
-        System.out.println(Main.string_separator);
+    public void deletePizza(Order order) {
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите пиццу для удаления:");
         ArrayList<PizzaWithSize> pizzas = order.getPizzas();
 
@@ -380,7 +385,7 @@ public class OrderActions {
 
         while (true) {
             System.out.print("Введите номер: ");
-            int pizza_num = Input.inputInt();
+            int pizza_num = input.inputInt();
 
             if (pizza_num == num) {
                 editUncompletedOrder();
@@ -396,30 +401,30 @@ public class OrderActions {
                 return;
             }
             else {
-                Main.errorChoice();
+                homeActions.errorChoice();
             }
         }
     }
 
-    public static void completeOrder() {
-        System.out.println(Main.string_separator);
+    public void completeOrder() {
+        System.out.println(homeActions.string_separator);
         System.out.print("Выберите номер заказа: ");
 
-        int choice = Input.inputInt();
-        if ((choice > uncompleted_order_list.size()) || (choice < 1)) {
-            Main.errorChoice();
+        int choice = input.inputInt();
+        if ((choice > dataBase.getUncompletedOrdersList().size()) || (choice < 1)) {
+            homeActions.errorChoice();
             completeOrder();
             return;
         }
 
-        Order cur_order = uncompleted_order_list.get(choice - 1);
-        
+        Order cur_order = dataBase.getUncompletedOrdersList().get(choice - 1);
+
         System.out.print("Введите время заказа (или оставьте пустым для текущего времени), формат ГГГГ-ММ-ДД ЧЧ:ММ: ");
-        LocalDateTime inputTime = Input.inputDateTime();
+        LocalDateTime inputTime = input.inputDateTime();
 
         cur_order.setOrderTime(inputTime);
-        completed_order_list.add(cur_order);
-        uncompleted_order_list.remove(choice - 1);
+        dataBase.addCompletedOrderToList(cur_order);
+        dataBase.deleteUncompletedOrder(cur_order);
         System.out.println("Заказ успешно создан! Ожидайте его в течении 10 минут!");
         startOrderActions();
         return;

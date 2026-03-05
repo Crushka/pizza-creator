@@ -5,158 +5,189 @@ import MainEvent.*;
 
 public class IngredientsActions {
 
-    public static void createNewIngredient() {
-        System.out.println(Main.string_separator);
-        System.out.print("Введите название ингредиента: ");
-        String name = Input.inputString();
+    HomeActions homeActions;
+    DataBase dataBase;
+    Input input;
 
-        for (Ingredient ingredient : DataBase.getIngredientsList()) {
-            if (ingredient.getName().equals(name)) {
-                System.out.println("Ингредиент с таким названием уже существует!");
-                createNewIngredient();
-                return;
+    public IngredientsActions(DataBase dataBase, Input input, HomeActions homeActions) {
+        this.dataBase = dataBase;
+        this.input = input;
+        this.homeActions = homeActions;
+    }
+
+    public void createNewIngredient() {
+        System.out.println(homeActions.string_separator);
+
+        String name;
+        while (true) {
+            System.out.print("Введите название ингредиента: ");
+            name = input.inputString();
+
+            boolean isExist = false;
+            for (Ingredient ingredient : dataBase.getIngredientsList()) {
+                if (ingredient.getName().equals(name)) {
+                    System.out.println("Ингредиент с таким названием уже существует!");
+                    isExist = true;
+                }
+                if (isExist) break;
             }
+            if (isExist) continue;
+            break;
         }
 
         System.out.print("Введите цену ингредиента: ");
-        float price = Input.inputFloat();
+        float price = input.inputFloat();
 
-        DataBase.getIngredientsList().add(new Ingredient(name, price));
+        dataBase.addIngredientToList(new Ingredient(name, price));
         System.out.println("Ингредиент успешно добавлен!");
-        Main.createThings();
+        homeActions.createThings();
+        return;
     }
 
-    public static void deleteIngredient() {
-        if (DataBase.getIngredientsList().isEmpty()) {
+    public void deleteIngredient() {
+        if (dataBase.getIngredientsList().isEmpty()) {
             System.out.println("Вы не создали ни одного ингредиента!");
-            Main.createThings();
+            homeActions.createThings();
             return;
         }
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите ингредиент для удаления: ");
         int num = 1;
 
-        for (Ingredient ingredient : DataBase.getIngredientsList()) {
+        for (Ingredient ingredient : dataBase.getIngredientsList()) {
             System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
         System.out.println(num + ". Назад");
 
-        System.out.print("Введите номер: ");
-        int choice_del = Input.inputInt();
+        int choice_del;
+        while (true) {
+            System.out.print("Введите номер: ");
+            choice_del = input.inputInt();
 
-        if (choice_del == num)
-            Main.createThings();
+            if (choice_del == num)
+                homeActions.createThings();
 
-        else if ((choice_del > num) || (choice_del <= 0)) {
-            Main.errorChoice();
-            Main.createThings();
+            else if ((choice_del > num) || (choice_del <= 0)) {
+                homeActions.errorChoice();
+                continue;
+            }
+            break;
         }
 
-        Ingredient deletedIngredient = DataBase.getIngredientsList().get(choice_del - 1);
-        DataBase.getIngredientsList().remove(choice_del - 1);
+        Ingredient deletedIngredient = dataBase.getIngredientsList().get(choice_del - 1);
+        dataBase.deleteIngredient(deletedIngredient);
 
-        for (IPizza pizza : DataBase.getAllPizzaList()) { /// УДАЛЯЕМ ИНГРЕДИЕНТ ИЗ ПИПЦЦ
-            java.util.Iterator<Ingredient> it = pizza.getIngredientInfo().iterator();
-            while (it.hasNext()) {
-                if (it.next().getName().equals(deletedIngredient.getName())) {
-                    it.remove();
-                }
-            }
+        for (IPizza pizza : dataBase.getAllPizzaList()) {
+            pizza.removeIngredient(deletedIngredient.getName());
         }
 
-        for (Crust crust : DataBase.getCrustsList()) { /// УДАЛЯЕМ ИНГРЕДИЕНТ ИЗ БОРТОВ
-            java.util.Iterator<Ingredient> it = crust.getIngredients().iterator();
-            while (it.hasNext()) {
-                if (it.next().getName().equals(deletedIngredient.getName())) {
-                    it.remove();
-                }
-            }
+        for (Crust crust : dataBase.getCrustsList()) {
+            crust.removeIngredient(deletedIngredient.getName());
         }
 
         System.out.println("Ингредиент успешно удалён!");
-        Main.createThings();
+        homeActions.createThings();
     }
 
-    public static void changeIngredientPrice() {
-        if (DataBase.getIngredientsList().isEmpty()) {
+    public void changeIngredientPrice() {
+        if (dataBase.getIngredientsList().isEmpty()) {
             System.out.println("Вы не создали ни одного ингредиента!");
-            Main.getBaseIngInfo();
+            homeActions.getBaseIngInfo();
             return;
         }
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите ингредиент для изменения цены: ");
         int num = 1;
 
-        for (Ingredient ingredient : DataBase.getIngredientsList()) {
+        for (Ingredient ingredient : dataBase.getIngredientsList()) {
             System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
         System.out.println(num + ". Назад");
-                
-        System.out.print("Введите номер: ");
-        int choice_ingredient = Input.inputInt();
+        
+        int choice_ingredient;
+        while (true) {
+            System.out.print("Введите номер: ");
+            choice_ingredient = input.inputInt();
 
-        if (choice_ingredient == num) {
-            Main.getBaseIngInfo();
-        }
-        else if ((choice_ingredient > num) || (choice_ingredient <= 0)) {
-            Main.errorChoice();
-            changeIngredientPrice();
+            if (choice_ingredient == num) {
+                homeActions.getBaseIngInfo();
+            }
+            else if ((choice_ingredient > num) || (choice_ingredient <= 0)) {
+                homeActions.errorChoice();
+                continue;
+            }
+            break;
         }
 
         System.out.print("Введите новую цену: ");
-        float new_price = Input.inputFloat();
+        float new_price = input.inputFloat();
 
-        DataBase.getIngredientsList().get(choice_ingredient - 1).setPrice(new_price);
+        dataBase.getIngredientsList().get(choice_ingredient - 1).setPrice(new_price);
         System.out.println("Цена успешно изменена!");
-        Main.getBaseIngInfo();
+        homeActions.getBaseIngInfo();
     }
 
-    public static void changeIngredientName() {
-        if (DataBase.getIngredientsList().isEmpty()) {
+    public void changeIngredientName() {
+        if (dataBase.getIngredientsList().isEmpty()) {
             System.out.println("Вы не создали ни одного ингредиента!");
-            Main.getBaseIngInfo();
+            homeActions.getBaseIngInfo();
             return;
         }
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите ингредиент для изменения названия: ");
         int num = 1;
 
-        for (Ingredient ingredient : DataBase.getIngredientsList()) {
+        for (Ingredient ingredient : dataBase.getIngredientsList()) {
             System.out.println(num + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
             num++;
         }
         System.out.println(num + ". Назад");
-                
-        System.out.print("Введите номер: ");
-        int choice_ingredient = Input.inputInt();
+        
+        int choice_ingredient;
+        while (true) {
+            System.out.print("Введите номер: ");
+            choice_ingredient = input.inputInt();
 
-        if (choice_ingredient == num) {
-            Main.getBaseIngInfo();
-        }
-        else if ((choice_ingredient > num) || (choice_ingredient <= 0)) {
-            Main.errorChoice();
-            changeIngredientName();
-        }
-
-        System.out.print("Введите новое название: ");
-        String new_name = Input.inputString();
-
-        for (Ingredient ingredient : DataBase.getIngredientsList()) {
-            if (ingredient.getName().equals(new_name)) {
-                System.out.println("Ингредиент с таким названием уже существует!");
-                changeIngredientName();
-                return;
+            if (choice_ingredient == num) {
+                homeActions.getBaseIngInfo();
             }
+            else if ((choice_ingredient > num) || (choice_ingredient <= 0)) {
+                homeActions.errorChoice();
+                continue;
+            }
+            break;
         }
 
-        DataBase.getIngredientsList().get(choice_ingredient - 1).setName(new_name);
+        String new_name;
+        while (true) {
+            System.out.print("Введите новое название: ");
+            new_name = input.inputString();
+
+            if (new_name.isBlank()) {
+                System.out.println("Строка не должна быть пустой!");
+                continue;
+            }
+
+            boolean isExist = false;
+            for (Ingredient ingredient : dataBase.getIngredientsList()) {
+                if (ingredient.getName().equals(new_name)) {
+                    System.out.println("Ингредиент с таким названием уже существует!");
+                    isExist = true;
+                    break;
+                }
+            }
+            if (isExist) continue;
+            break;
+        }
+
+        dataBase.getIngredientsList().get(choice_ingredient - 1).setName(new_name);
 
         System.out.println("Название успешно изменено!");
-        Main.getBaseIngInfo();
+        homeActions.getBaseIngInfo();
     }
 }

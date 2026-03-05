@@ -8,26 +8,36 @@ import ObjectClasses.*;
 
 public class CrustActions {
 
-    public static void createNewCrust() {
-        System.out.println(Main.string_separator);
-        System.out.print("Введите название бортика: ");
-        String name = Input.inputString();
+    DataBase dataBase;
+    HomeActions homeActions;
+    Input input;
 
-        System.out.println(Main.string_separator);
+    public CrustActions(DataBase dataBase, Input input, HomeActions homeActions) {
+        this.dataBase = dataBase;
+        this.input = input;
+        this.homeActions = homeActions;
+    }
+
+    public void createNewCrust() {
+        System.out.println(homeActions.string_separator);
+        System.out.print("Введите название бортика: ");
+        String name = input.inputString();
+
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите пиццы, разрешенные для этого бортика через запятую (или введите ALL для выбора всех пицц):");
         int num = 1;
         System.out.println("Пользовательские пиццы:");
-        for (CustomPizza pizza : DataBase.getCustomPizzaList()) {
+        for (CustomPizza pizza : dataBase.getCustomPizzaList()) {
             System.out.println(num + ". " + pizza.getName());
             num++;
         }
         System.out.println("Комбинированные пиццы:");
-        for (CombinedPizza pizza : DataBase.getCombinedPizzaList()) {
+        for (CombinedPizza pizza : dataBase.getCombinedPizzaList()) {
             System.out.println(num + ". " + pizza.getName());
             num++;
         }
         System.out.println("Системные пиццы:");
-        for (SystemPizza pizza : DataBase.getSystemPizzaList()) {
+        for (SystemPizza pizza : dataBase.getSystemPizzaList()) {
             System.out.println(num + ". " + pizza.getName());
             num++;
         }
@@ -36,31 +46,31 @@ public class CrustActions {
 
         while (true) {
             System.out.print("Введите номера пицц через запятую (или ALL): ");
-            String input = Input.inputString().trim();
-            if (input.equalsIgnoreCase("ALL")) {
+            String inp = input.inputString().trim();
+            if (inp.equalsIgnoreCase("ALL")) {
                 pizza_names.clear();
-                pizza_names.addAll(DataBase.getCustomPizzaList());
-                pizza_names.addAll(DataBase.getCombinedPizzaList());
-                pizza_names.addAll(DataBase.getSystemPizzaList());
+                pizza_names.addAll(dataBase.getCustomPizzaList());
+                pizza_names.addAll(dataBase.getCombinedPizzaList());
+                pizza_names.addAll(dataBase.getSystemPizzaList());
                 break;
             }
-            if (input.isEmpty()) {
+            if (inp.isEmpty()) {
                 System.out.println("Вы должны выбрать хотя бы одну пиццу.");
                 continue;
             }
             try {
                 ArrayList<IPizza> temp = new ArrayList<>();
-                String[] pizzaNumbers = input.split(",");
+                String[] pizzaNumbers = inp.split(",");
                 for (String numberStr : pizzaNumbers) {
                     int pizzaNumber = Integer.parseInt(numberStr.trim());
                     if (pizzaNumber >= 1 && pizzaNumber < num) {
-                        if (pizzaNumber <= DataBase.getCustomPizzaList().size()) {
-                            temp.add(DataBase.getCustomPizzaList().get(pizzaNumber - 1));
-                        } else if (pizzaNumber <= DataBase.getCustomPizzaList().size() + DataBase.getCombinedPizzaList().size()) {
-                            temp.add(DataBase.getCombinedPizzaList().get(pizzaNumber - DataBase.getCustomPizzaList().size() - 1));
+                        if (pizzaNumber <= dataBase.getCustomPizzaList().size()) {
+                            temp.add(dataBase.getCustomPizzaList().get(pizzaNumber - 1));
+                        } else if (pizzaNumber <= dataBase.getCustomPizzaList().size() + dataBase.getCombinedPizzaList().size()) {
+                            temp.add(dataBase.getCombinedPizzaList().get(pizzaNumber - dataBase.getCustomPizzaList().size() - 1));
                         } else {
-                            temp.add(DataBase.getSystemPizzaList().get(pizzaNumber - 
-                                DataBase.getCustomPizzaList().size() - DataBase.getCombinedPizzaList().size() - 1));
+                            temp.add(dataBase.getSystemPizzaList().get(pizzaNumber - 
+                                dataBase.getCustomPizzaList().size() - dataBase.getCombinedPizzaList().size() - 1));
                         }
                     } else {
                         System.out.println("Номер пиццы " + pizzaNumber + " вне диапазона. Пожалуйста, введите корректные номера.");
@@ -77,17 +87,17 @@ public class CrustActions {
             }
         }
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите ингредиенты для бортика:");
         int num_ing = 1;
-        for (Ingredient ingredient : DataBase.getIngredientsList()) {
-            System.out.println(num_ing++ + ingredient.getName() + "\t" + ingredient.getPrice());
+        for (Ingredient ingredient : dataBase.getIngredientsList()) {
+            System.out.println(num_ing++ + ". " + ingredient.getName() + "\t" + ingredient.getPrice());
         }
 
         ArrayList<Ingredient> crustIngredients = new ArrayList<>();
         while (true) {
             System.out.print("Введите номера ингредиентов через запятую: ");
-            String ingredientInput = Input.inputString();
+            String ingredientInput = input.inputString();
             if (ingredientInput.trim().isEmpty()) {
                 System.out.println("Вы не выбрали ни одного ингредиента. Пожалуйста, введите номера ингредиентов через запятую!");
                 continue;
@@ -97,9 +107,9 @@ public class CrustActions {
             for (String numberStr : ingredientNumbers) {
                 try {
                     int ingredientNumber = Integer.parseInt(numberStr.trim());
-                    if (ingredientNumber >= 1 && ingredientNumber <= DataBase.getIngredientsList().size()) {
+                    if (ingredientNumber >= 1 && ingredientNumber <= dataBase.getIngredientsList().size()) {
                         is_added = true;
-                        crustIngredients.add(DataBase.getIngredientsList().get(ingredientNumber - 1));
+                        crustIngredients.add(dataBase.getIngredientsList().get(ingredientNumber - 1));
                     } else {
                         System.out.println("Номер ингредиента " + ingredientNumber + " вне диапазона. Пожалуйста, введите корректный номер.");
                     }
@@ -116,83 +126,83 @@ public class CrustActions {
         }
 
         Crust crust = new Crust(name, crustIngredients, pizza_names);
-        DataBase.getCrustsList().add(crust);
+        dataBase.addCrustToList(crust);
 
         System.out.println("Бортик успешно создан!");
-        Main.createThings();
+        homeActions.createThings();
         return;
     }
 
-    public static void deleteCrust() {
-        System.out.println(Main.string_separator);
+    public void deleteCrust() {
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите бортик для удаления:");
         int num = 1;
-        for (Crust crust : DataBase.getCrustsList())
+        for (Crust crust : dataBase.getCrustsList())
             System.out.println(num++ + ". " + crust.toString());
         System.out.println(num + ". Назад");
 
         System.out.print("Введите номер: ");
-        int choice = Input.inputInt();
+        int choice = input.inputInt();
 
         if (choice == num) {
-            Main.createThings();
+            homeActions.createThings();
             return;
         }
 
         if ((choice < 1) || (choice > num )) {
-            Main.errorChoice();
+            homeActions.errorChoice();
             deleteCrust();
             return;
         }
         
-        Crust cur_crust = DataBase.getCrustsList().get(choice - 1);
+        Crust cur_crust = dataBase.getCrustsList().get(choice - 1);
         ArrayList<IPizza> pizzas_said_no = new ArrayList<>();
-        for (IPizza pizza : DataBase.getAllPizzaList()) {
+        for (IPizza pizza : dataBase.getAllPizzaList()) {
             if (pizza.getCrustInfo().contains(cur_crust)) {
                 pizzas_said_no.add(pizza);
             }
         }
 
         if (!pizzas_said_no.isEmpty()) {
-            System.out.println(Main.string_separator);
+            System.out.println(homeActions.string_separator);
             for (IPizza pizza : pizzas_said_no)
                 System.out.println("Бортик не может быть удален, так как уже содержится в пицце " + pizza.getName() + "!");
             deleteCrust();
             return;
         }
         
-        DataBase.getCrustsList().remove(cur_crust);
+        dataBase.deleteCrust(cur_crust);
         System.out.println("Бортик успешно удален!");
-        Main.createThings();
+        homeActions.createThings();
         return;
     }
 
-    public static void getCrustInfo() {
-        System.out.println(Main.string_separator);
+    public void getCrustInfo() {
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите фильтр:");
         System.out.println("1. Фильтр по названию бортика");
         System.out.println("2. Фильтр по ингредиенту");
 
-        System.out.println(Main.string_separator);
+        System.out.println(homeActions.string_separator);
         System.out.println("Введите номер: ");
-        int filter_choice = Input.inputInt();
+        int filter_choice = input.inputInt();
 
         List<Crust> toShow;
         switch (filter_choice) {
             case 1:
-                System.out.println(Main.string_separator);
+                System.out.println(homeActions.string_separator);
                 System.out.println("Фильтр по названию бортика (оставьте строку пустой для вывода всех элементов): ");
-                String filter_name = Input.inputString();
-                toShow = Filtration.filterCrustsByName(DataBase.getCrustsList(), filter_name);
+                String filter_name = input.inputString();
+                toShow = Filtration.filterCrustsByName(dataBase.getCrustsList(), filter_name);
                 break;
             case 2:
-                System.out.println(Main.string_separator);
+                System.out.println(homeActions.string_separator);
                 System.out.println("Фильтр по ингредиенту (оставьте строку пустой для вывода всех элементов): ");
-                String filter_ing = Input.inputString();
-                toShow = Filtration.filterCrustsByIngredients(DataBase.getCrustsList(), filter_ing);
+                String filter_ing = input.inputString();
+                toShow = Filtration.filterCrustsByIngredients(dataBase.getCrustsList(), filter_ing);
                 break;
             default:
-                Main.errorChoice();
+                homeActions.errorChoice();
                 getCrustInfo();
                 return;
         }
@@ -208,27 +218,27 @@ public class CrustActions {
 
         while (true) {
             System.out.print("Введите номер: ");
-            int choice = Input.inputInt();
+            int choice = input.inputInt();
 
             switch (choice) {
                 case 1:
                     changeCrustName();
                     break;
                 case 2:
-                    Main.home();
+                    homeActions.home();
                     break;
                 default:
-                    Main.errorChoice();
+                    homeActions.errorChoice();
             }
         }
     }
 
-    public static void changeCrustName() {
-        System.out.println(Main.string_separator);
+    public void changeCrustName() {
+        System.out.println(homeActions.string_separator);
         System.out.println("Выберите бортик:");
 
         int num = 1;
-        for (Crust crust : DataBase.getCrustsList()) {
+        for (Crust crust : dataBase.getCrustsList()) {
             System.out.println(num++ + ". " + crust.getName());
         }
         System.out.println(num + ". Назад");
@@ -236,7 +246,7 @@ public class CrustActions {
         int choice;
         while (true) {
             System.out.print("Введите номер: ");
-            choice = Input.inputInt();
+            choice = input.inputInt();
 
             if (choice == num) {
                 getCrustInfo();
@@ -244,19 +254,19 @@ public class CrustActions {
             }
 
             if ((choice < 1) || (choice > num)) {
-                Main.errorChoice();
+                homeActions.errorChoice();
                 continue;
             }
 
             break;
         }
 
-        Crust cur_crust = DataBase.getCrustsList().get(choice - 1);
+        Crust cur_crust = dataBase.getCrustsList().get(choice - 1);
 
         String new_name;
         while (true) {
             System.out.print("Введите новое название: ");
-            new_name = Input.inputString();
+            new_name = input.inputString();
 
             if (new_name.isBlank()) {
                 System.out.println("Строка не должна быть пустой!");
